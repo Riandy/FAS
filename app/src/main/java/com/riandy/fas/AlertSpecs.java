@@ -5,4 +5,6 @@ package com.riandy.fas;
  */
 public class AlertSpecs {
 
+    DaySpecs daySpecs;
+
 }

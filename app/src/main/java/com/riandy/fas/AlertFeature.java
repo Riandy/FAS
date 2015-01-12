@@ -20,7 +20,7 @@ public class AlertFeature {
     Context context;
     Vibrator vibrator;
     String instructionToReadWhenAlertSounds;
-    boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled;
+    boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled, isNotificationEnabled;
     MediaPlayer mPlayer;
     String tone;
 
@@ -35,6 +35,7 @@ public class AlertFeature {
         isSoundEnabled = true;
         isLaunchAppEnabled = false;
         isVoiceInstructionStatusEnabled = false;
+        isNotificationEnabled = true;
     }
 
     // used to launch all type of alerts enabled
@@ -51,12 +52,19 @@ public class AlertFeature {
         if(isLaunchAppEnabled){
             launchApp();
         }
+        if(isNotificationEnabled){
+            launchNotification();
+        }
     }
 
     public void stopAlerts(){
-        mPlayer.pause();
-        mPlayer.stop();
-        vibrator.cancel();
+        if (isVibrationEnabled)
+            vibrator.cancel();
+
+        if (isSoundEnabled) {
+            mPlayer.pause();
+            mPlayer.stop();
+        }
     }
 
     public void launchVibration(){
@@ -98,7 +106,9 @@ public class AlertFeature {
 
     }
 
+    public void launchNotification(){
 
+    }
     // all the data required for the alert feature are stored here
 
     // vibration status
