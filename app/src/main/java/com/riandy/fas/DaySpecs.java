@@ -1,7 +1,8 @@
 package com.riandy.fas;
 
+import org.joda.time.LocalDate;
+
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Riandy on 12/1/15.
@@ -19,24 +20,31 @@ public class DaySpecs {
     public enum DayTypes {DATERANGE, DATEONLY, UNLIMITED};
     public enum Frequency {EVERYDAY, WEEKDAY, WEEKEND, CUSTOM};
     
-    DayTypes type;
-    Date startDate,endDate;
-    boolean dayOfWeek[];
-    boolean repeatWeekly;
+    private DayTypes type;
+    private LocalDate startDate,endDate;
+    private boolean dayOfWeek[];
+    private boolean repeatWeekly;
 
-    DaySpecs(DayTypes type){
-        this.type = type;
+    DaySpecs(){
         dayOfWeek = new boolean[7];
     }
 
+    public void setDayType(DayTypes type){
+        this.type = type;
+    }
+
+    public DayTypes getDayType(){
+        return type;
+    }
+
     //this method is used to set date only alert (one-off)
-    public void setDate(Date date){
+    public void setDate(LocalDate date){
         startDate = date;
         endDate = date;
     }
 
     //this method is used to set date range alert
-    public void setDateRange(Date startDate, Date endDate){
+    public void setDateRange(LocalDate startDate, LocalDate endDate){
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -74,5 +82,29 @@ public class DaySpecs {
         }
     }
 
+
+    public boolean[] getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(boolean[] dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public boolean isRepeatWeekly() {
+        return repeatWeekly;
+    }
+
+    public void setRepeatWeekly(boolean status){
+        repeatWeekly = status;
+    }
 
 }

@@ -17,20 +17,17 @@ import android.os.Vibrator;
  */
 public class AlertFeature {
 
-    Context context;
-    Vibrator vibrator;
-    String instructionToReadWhenAlertSounds;
-    boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled, isNotificationEnabled;
-    MediaPlayer mPlayer;
-    String tone;
+    private Context context;
+    private Vibrator vibrator;
+    private String name, description;
+    private boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled, isNotificationEnabled;
+    private MediaPlayer mPlayer;
+    private String tone;
+    private String appToLaunch;
 
-    AlertFeature(Context context){
-        this.context = context;
+    AlertFeature(){
 
-        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        mPlayer = new MediaPlayer();
-
-        instructionToReadWhenAlertSounds = "";
+        description = "";
         isVibrationEnabled = true;
         isSoundEnabled = true;
         isLaunchAppEnabled = false;
@@ -39,7 +36,13 @@ public class AlertFeature {
     }
 
     // used to launch all type of alerts enabled
-    public void launchAlerts(){
+    public void launchAlerts(Context context){
+
+        this.context = context;
+
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        mPlayer = new MediaPlayer();
+
         if (isVibrationEnabled){
             launchVibration();
         }
@@ -113,4 +116,91 @@ public class AlertFeature {
 
     // vibration status
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public Vibrator getVibrator() {
+        return vibrator;
+    }
+
+    public void setVibrator(Vibrator vibrator) {
+        this.vibrator = vibrator;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isVibrationEnabled() {
+        return isVibrationEnabled;
+    }
+
+    public void setVibrationEnabled(boolean isVibrationEnabled) {
+        this.isVibrationEnabled = isVibrationEnabled;
+    }
+
+    public boolean isVoiceInstructionStatusEnabled() {
+        return isVoiceInstructionStatusEnabled;
+    }
+
+    public void setVoiceInstructionStatusEnabled(boolean isVoiceInstructionStatusEnabled) {
+        this.isVoiceInstructionStatusEnabled = isVoiceInstructionStatusEnabled;
+    }
+
+    public boolean isSoundEnabled() {
+        return isSoundEnabled;
+    }
+
+    public void setSoundEnabled(boolean isSoundEnabled) {
+        this.isSoundEnabled = isSoundEnabled;
+    }
+
+    public boolean isLaunchAppEnabled() {
+        return isLaunchAppEnabled;
+    }
+
+    public void setLaunchAppEnabled(boolean isLaunchAppEnabled) {
+        this.isLaunchAppEnabled = isLaunchAppEnabled;
+    }
+
+    public boolean isNotificationEnabled() {
+        return isNotificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean isNotificationEnabled) {
+        this.isNotificationEnabled = isNotificationEnabled;
+    }
+
+    public String getTone() {
+        return tone;
+    }
+
+    public void setTone(String tone) {
+        this.tone = tone;
+    }
+
+    public String getAppToLaunch() {
+        return appToLaunch;
+    }
+
+    public void setAppToLaunch(String appToLaunch) {
+        this.appToLaunch = appToLaunch;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

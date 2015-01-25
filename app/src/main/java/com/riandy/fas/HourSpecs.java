@@ -10,9 +10,9 @@ public class HourSpecs {
     public enum HourTypes {EXACTTIME, TIMERANGE, RANDOM};
 
     HourTypes type;
-    LocalTime startTime, endTime;
+    LocalTime startTime, endTime, lastAlertTime;
     int intervalInHour;
-    int numOfTimes;
+    int numOfTimes,currentCounter;
 
     // Exact time = one timing
 
@@ -20,10 +20,13 @@ public class HourSpecs {
 
     // Random = startTime, endTime, numOfTimes
 
-    HourSpecs(HourTypes type){
+    public void setHourType(HourTypes type){
         this.type = type;
     }
 
+    public HourTypes getHourType(){
+        return type;
+    }
     public void setExactTime(LocalTime time){
         startTime = time;
         endTime = time;
@@ -40,6 +43,15 @@ public class HourSpecs {
         this.endTime = endTime;
         this.numOfTimes = numOfTimes;
     }
+
+    public void setTimeRangeWithoutInterval(LocalTime startTime, LocalTime endTime){
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public void setIntervalInHour(int interval) { intervalInHour = interval; }
+
+    public void setNumOfTimes(int num) { numOfTimes = num; }
 
     public HourTypes getHourTypes(){
         return type;
@@ -59,5 +71,21 @@ public class HourSpecs {
 
     public int getNumOfTimes(){
         return numOfTimes;
+    }
+
+    public LocalTime getLastAlertTime() {
+        return lastAlertTime;
+    }
+
+    public void setLastAlertTime(LocalTime lastAlertTime) {
+        this.lastAlertTime = lastAlertTime;
+    }
+
+    public int getCurrentCounter() {
+        return currentCounter;
+    }
+
+    public void setCurrentCounter(int currentCounter) {
+        this.currentCounter = currentCounter;
     }
 }
