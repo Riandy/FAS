@@ -1,4 +1,4 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
 
 import android.provider.BaseColumns;
 

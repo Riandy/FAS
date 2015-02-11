@@ -1,4 +1,4 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.riandy.fas.AlertContract.Alert;
+import com.riandy.fas.Alert.AlertContract.Alert;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -113,6 +113,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         boolean isEnabled = 1==c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_ENABLED));
 
         AlertModel model = new AlertModel(alertFeature,alertSpecs,isEnabled);
+        model.id = c.getInt(c.getColumnIndex(Alert._ID));
 
         return model;
     }

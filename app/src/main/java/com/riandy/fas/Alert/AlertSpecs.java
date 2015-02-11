@@ -1,4 +1,4 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
 
 /**
  * Created by Riandy on 1/1/15.
@@ -8,7 +8,7 @@ public class AlertSpecs {
     private DaySpecs daySpecs;
     private HourSpecs hourSpecs;
 
-    AlertSpecs(){
+    public AlertSpecs(){
         daySpecs = new DaySpecs();
         hourSpecs = new HourSpecs();
     }

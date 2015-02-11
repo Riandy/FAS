@@ -1,9 +1,12 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Riandy on 1/1/15.
  */
-public class AlertModel {
+public class AlertModel implements Parcelable{
 
     //AlertModel has alert feature and alert specs
     //AlertModel feature controls what happens when the alarm goes of (Vibration, Sound, Launch App, etc).
@@ -15,15 +18,19 @@ public class AlertModel {
     private boolean isEnabled;
     long id;
 
-    AlertModel() {
+    public AlertModel() {
         alertFeature = new AlertFeature();
         alertSpecs = new AlertSpecs();
     }
 
-    AlertModel(AlertFeature alertFeature, AlertSpecs alertSpecs, boolean isEnabled){
+    public AlertModel(AlertFeature alertFeature, AlertSpecs alertSpecs, boolean isEnabled){
         this.alertFeature = alertFeature;
         this.alertSpecs = alertSpecs;
         this.isEnabled = isEnabled;
+    }
+
+    public AlertModel(Parcel in){
+        readFromParcel(in);
     }
 
     public AlertFeature getAlertFeature() {
@@ -48,5 +55,20 @@ public class AlertModel {
 
     public void setEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+
+    private void readFromParcel(Parcel in){
+
     }
 }

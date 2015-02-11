@@ -1,4 +1,4 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -6,6 +6,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
+
+import java.util.Locale;
 
 /**
  * Created by Riandy on 1/1/15.
@@ -19,13 +22,16 @@ public class AlertFeature {
 
     private Context context;
     private Vibrator vibrator;
-    private String name, description;
+    private String name;
+    private String description;
     private boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled, isNotificationEnabled;
     private MediaPlayer mPlayer;
     private String tone;
     private String appToLaunch;
+    private TextToSpeech textToSpeechObj;
+    private final String TTS_ID = "TextToSpeech id=1";
 
-    AlertFeature(){
+    public AlertFeature(){
 
         description = "";
         isVibrationEnabled = true;
@@ -61,10 +67,11 @@ public class AlertFeature {
     }
 
     public void stopAlerts(){
-        if (isVibrationEnabled)
+
+        if (isVibrationEnabled && vibrator != null)
             vibrator.cancel();
 
-        if (isSoundEnabled) {
+        if (isSoundEnabled && mPlayer != null) {
             mPlayer.pause();
             mPlayer.stop();
         }
@@ -77,7 +84,14 @@ public class AlertFeature {
     }
 
     public void launchVoiceInstruction(){
-
+        textToSpeechObj = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                textToSpeechObj.setLanguage(Locale.UK);
+                textToSpeechObj.speak(description,TextToSpeech.QUEUE_FLUSH,null);
+            }
+        }
+        );
     }
 
     public void launchSound(){

@@ -1,11 +1,14 @@
-package com.riandy.fas;
+package com.riandy.fas.Alert;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
+import com.riandy.fas.Alert.AlertContract.Alert;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -44,8 +47,12 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 LocalTime localTime = getValidTime(alert.getAlertSpecs().getHourSpecs());
                 if(localDate == null || localTime == null)
                     continue;
-                calendar.set(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth(),
+                calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
                         localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
+                if(calendar.before(Calendar.getInstance())) // date has passed. just continue;
+                    continue;
+                PendingIntent pIntent = createPendingIntent(context, alert);
+                setAlert(context,calendar,pIntent);
             }
         }
 
@@ -69,7 +76,6 @@ public class AlertManagerHelper extends BroadcastReceiver {
             today.plusDays(i);
             return today;
         } else if(daySpecs.getDayType() == DaySpecs.DayTypes.DATEONLY){ //one off event
-
             return startDate;
 
         } else if((today.isAfter(startDate) || today.isEqual(startDate)) &&
@@ -84,8 +90,9 @@ public class AlertManagerHelper extends BroadcastReceiver {
             today.plusDays(i);
             //check if its within date range
             if((today.isAfter(startDate) || today.isEqual(startDate)) &&
-                    (today.isBefore(endDate) || today.isEqual(endDate)))
+                    (today.isBefore(endDate) || today.isEqual(endDate))) {
                 return today;
+            }
         }
         Log.e("ERROR getValidDate", "return null value");
         return null;
@@ -121,6 +128,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
         return today;
     }
+
     public static void cancelAlerts(Context context) {
         Log.d("Alert", "all alarms cancelled");
         AlertDBHelper dbHelper = new AlertDBHelper(context);
@@ -141,9 +149,13 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
     private static PendingIntent createPendingIntent(Context context, AlertModel model) {
         Intent intent = new Intent(context, AlertService.class);
-        /*
-        intent.putExtra(ID, model.id);
-        intent.putExtra(NAME, model.getAlertFeature().getName());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Alert.COLUMN_NAME_ALERT_DESCRIPTION, model.getAlertFeature().getDescription());
+        bundle.putInt(ID,(int)model.id);
+        intent.putExtras(bundle);
+
+        /*intent.putExtra(NAME, model.getAlertFeature().getName());
         intent.putExtra(TIME_HOUR, model.getAlertSpecs().getHourSpecs().getStartTime().getHourOfDay());
         intent.putExtra(TIME_MINUTE, model.timeMinute);
         intent.putExtra(TONE, model.alarmTone.toString());
@@ -151,6 +163,16 @@ public class AlertManagerHelper extends BroadcastReceiver {
         return PendingIntent.getService(context, (int) model.id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    @SuppressLint("NewApi")
+    private static void setAlert(Context context, Calendar calendar, PendingIntent pIntent) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
+        }
+        Log.d("You set alarm ",calendar.getTime().toString());
+    }
 }
 
 /*

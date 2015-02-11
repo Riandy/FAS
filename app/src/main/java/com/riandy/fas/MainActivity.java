@@ -1,10 +1,20 @@
 package com.riandy.fas;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.riandy.fas.Alert.AlertDBHelper;
+import com.riandy.fas.Alert.AlertFeature;
+import com.riandy.fas.Alert.AlertManagerHelper;
+import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.AlertScreenFragment;
+import com.riandy.fas.Alert.AlertSpecs;
+import com.riandy.fas.Alert.DaySpecs;
+import com.riandy.fas.Alert.HourSpecs;
 
 import junit.framework.Assert;
 
@@ -12,7 +22,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +30,31 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         testAlert();
+        AlertManagerHelper.setAlerts(getApplicationContext());
+
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            Fragment firstFragment = new AlertScreenFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            firstFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+
+        }
     }
 
 
@@ -58,25 +93,23 @@ public class MainActivity extends ActionBarActivity {
         alertFeature.setSoundEnabled(true);
         alertFeature.setLaunchAppEnabled(false);
         alertFeature.setNotificationEnabled(true);
-        alertFeature.setTone("testTone.mp3");
-        alertFeature.setDescription("This is a test alert");
+        //alertFeature.setTone("elegant_ringtone.mp3");
+        alertFeature.setDescription("This is a test alert testing the Text to speech feature!");
         alertFeature.setAppToLaunch("Whatsapp");
 
-        alertSpecs.getDaySpecs().setDayType(DaySpecs.DayTypes.DATERANGE);
+        alertSpecs.getDaySpecs().setDayType(DaySpecs.DayTypes.DATEONLY);
         alertSpecs.getDaySpecs().setDate(new LocalDate());
-        alertSpecs.getDaySpecs().setDayOfWeek(new boolean[]{false,false,true,true,true,false,false});
+        alertSpecs.getDaySpecs().setDayOfWeek(new boolean[]{true,true,true,true,true,true,true});
         alertSpecs.getDaySpecs().setRepeatWeekly(true);
 
         alertSpecs.getHourSpecs().setHourType(HourSpecs.HourTypes.EXACTTIME);
-        alertSpecs.getHourSpecs().setTimeRange(new LocalTime(),new LocalTime(),5);
-        alertSpecs.getHourSpecs().setNumOfTimes(10);
+        alertSpecs.getHourSpecs().setExactTime(new LocalTime().plusMinutes(2));
+        alertSpecs.getHourSpecs().setNumOfTimes(1);
 
         model.setAlertFeature(alertFeature);
         model.setAlertSpecs(alertSpecs);
 
-        Log.d("SQL","HELLO");
         AlertDBHelper db = new AlertDBHelper(getApplicationContext());
-        Log.d("SQL",db.getDatabaseName());
 
         long id = db.createAlert(model);
         Log.d("SQL","adding id = "+id);
