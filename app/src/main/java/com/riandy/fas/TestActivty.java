@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.riandy.fas.Alert.AlertContract;
-import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertModel;
 
 
@@ -21,16 +19,15 @@ public class TestActivty extends ActionBarActivity {
         setContentView(R.layout.activity_test_activty);
         Log.d("YEAH","I am being called");
 
-        Bundle bundle = getIntent().getExtras();
+/*        Bundle bundle = getIntent().getExtras();
         Log.d("Output",bundle.getString(AlertContract.Alert.COLUMN_NAME_ALERT_DESCRIPTION));
         Log.d("Output","ID="+bundle.getInt("id"));
 
         AlertDBHelper dbHelper = new AlertDBHelper(getApplicationContext());
         alert  = dbHelper.getAlert(bundle.getInt("id"));
-        alert.getAlertFeature().setContext(getApplicationContext());
-        alert.getAlertFeature().launchVoiceInstruction();
-        alert.getAlertFeature().launchSound();
 
+        alert.getAlertFeature().launchAlerts(getApplicationContext());
+        */
     }
 
     @Override

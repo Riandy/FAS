@@ -153,6 +153,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
         Bundle bundle = new Bundle();
         bundle.putString(Alert.COLUMN_NAME_ALERT_DESCRIPTION, model.getAlertFeature().getDescription());
         bundle.putInt(ID,(int)model.id);
+        bundle.putString("Fragment","123");
         intent.putExtras(bundle);
 
         /*intent.putExtra(NAME, model.getAlertFeature().getName());

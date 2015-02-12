@@ -101,6 +101,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         //ALERT FEATURE
         AlertFeature alertFeature = new AlertFeature();
 
+        alertFeature.setName(c.getString(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_NAME)));
         alertFeature.setDescription(c.getString(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_DESCRIPTION)));
         alertFeature.setLaunchAppEnabled(1==c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_IS_LAUNCH_APP_ENABLED)));
         alertFeature.setSoundEnabled(1==c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_IS_SOUND_ENABLED)));

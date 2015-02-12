@@ -29,10 +29,6 @@ public class AlertModel implements Parcelable{
         this.isEnabled = isEnabled;
     }
 
-    public AlertModel(Parcel in){
-        readFromParcel(in);
-    }
-
     public AlertFeature getAlertFeature() {
         return alertFeature;
     }

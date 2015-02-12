@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.riandy.fas.Alert.AlertContract;
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
 import com.riandy.fas.Alert.AlertManagerHelper;
@@ -29,9 +30,35 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        testAlert();
-        AlertManagerHelper.setAlerts(getApplicationContext());
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null) {
+            Log.d("Output",""+bundle.get("Fragment"));
+            String fragmentToLaunch = bundle.getString("Fragment");
 
+            if(fragmentToLaunch==null){
+
+            }else if(fragmentToLaunch.equals("123")){
+                bundle.remove("Fragment");
+                Log.d("Output", ""+bundle.getString(AlertContract.Alert.COLUMN_NAME_ALERT_DESCRIPTION));
+                Log.d("Output", "ID=" + bundle.getInt("id"));
+                // Create a new Fragment to be placed in the activity layout
+                Fragment firstFragment = new AlertScreenFragment();
+
+                // In case this activity was started with special instructions from an
+                // Intent, pass the Intent's extras to the fragment as arguments
+                firstFragment.setArguments(getIntent().getExtras());
+
+                // Add the fragment to the 'fragment_container' FrameLayout
+                getFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, firstFragment).commit();
+            }
+        }else{
+            testAlert();
+            AlertManagerHelper.setAlerts(getApplicationContext());
+        }
+
+
+        /*
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.fragment_container) != null) {
@@ -54,7 +81,7 @@ public class MainActivity extends FragmentActivity {
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
 
-        }
+        }*/
     }
 
 
@@ -89,13 +116,14 @@ public class MainActivity extends FragmentActivity {
         AlertSpecs alertSpecs = new AlertSpecs();
 
         alertFeature.setVibrationEnabled(true);
-        alertFeature.setVoiceInstructionStatusEnabled(false);
+        alertFeature.setVoiceInstructionStatusEnabled(true);
         alertFeature.setSoundEnabled(true);
         alertFeature.setLaunchAppEnabled(false);
         alertFeature.setNotificationEnabled(true);
         //alertFeature.setTone("elegant_ringtone.mp3");
+        alertFeature.setName("Buy lunch!");
         alertFeature.setDescription("This is a test alert testing the Text to speech feature!");
-        alertFeature.setAppToLaunch("Whatsapp");
+        alertFeature.setAppToLaunch("com.riandy.fas");
 
         alertSpecs.getDaySpecs().setDayType(DaySpecs.DayTypes.DATEONLY);
         alertSpecs.getDaySpecs().setDate(new LocalDate());

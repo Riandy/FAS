@@ -1,10 +1,10 @@
 package com.riandy.fas.Alert;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.app.Service;
 
-import com.riandy.fas.TestActivty;
+import com.riandy.fas.MainActivity;
 
 /**
  * Created by Riandy on 4/2/15.
@@ -21,7 +21,7 @@ public class AlertService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Intent alarmIntent = new Intent(getBaseContext(), TestActivty.class);
+        Intent alarmIntent = new Intent(getBaseContext(), MainActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtras(intent);
         getApplication().startActivity(alarmIntent);

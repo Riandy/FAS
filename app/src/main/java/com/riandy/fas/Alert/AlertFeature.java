@@ -1,6 +1,8 @@
 package com.riandy.fas.Alert;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -49,6 +51,7 @@ public class AlertFeature {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mPlayer = new MediaPlayer();
 
+
         if (isVibrationEnabled){
             launchVibration();
         }
@@ -58,9 +61,11 @@ public class AlertFeature {
         if (isSoundEnabled){
             launchSound();
         }
+        /*
         if(isLaunchAppEnabled){
             launchApp();
         }
+        */
         if(isNotificationEnabled){
             launchNotification();
         }
@@ -120,10 +125,27 @@ public class AlertFeature {
     }
 
     public void launchApp(){
+        Intent i;
+        PackageManager manager = context.getPackageManager();
+        try {
+            i = manager.getLaunchIntentForPackage(appToLaunch);
+            if (i == null)
+                throw new PackageManager.NameNotFoundException();
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            context.startActivity(i);
+        } catch (PackageManager.NameNotFoundException e) {
 
+        }
     }
 
     public void launchNotification(){
+        Notif notif = new Notif(context);
+        notif.set_title(name);
+        notif.set_content(description);
+        notif.setAppToRun(appToLaunch);
+        PInfo pInfo = new PInfo(context);
+        pInfo.getPackages();
+        notif.setNotification();
 
     }
     // all the data required for the alert feature are stored here
