@@ -28,7 +28,7 @@ public class AlertScreenFragment extends Fragment {
         Log.d("Output", bundle.getString(AlertContract.Alert.COLUMN_NAME_ALERT_DESCRIPTION));
         Log.d("Output","ID="+bundle.getInt("id"));
 
-        AlertDBHelper dbHelper = new AlertDBHelper(this.getActivity().getApplicationContext());
+        AlertDBHelper dbHelper = AlertDBHelper.getInstance(this.getActivity().getApplicationContext());
         alert  = dbHelper.getAlert(bundle.getInt("id"));
 
         alert.getAlertFeature().launchAlerts(getActivity().getApplicationContext());

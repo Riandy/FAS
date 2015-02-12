@@ -7,13 +7,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.riandy.fas.Alert.AlertContract;
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
 import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
 import com.riandy.fas.Alert.AlertScreenFragment;
 import com.riandy.fas.Alert.AlertSpecs;
+import com.riandy.fas.Alert.Constant;
 import com.riandy.fas.Alert.DaySpecs;
 import com.riandy.fas.Alert.HourSpecs;
 
@@ -25,12 +25,23 @@ import org.joda.time.LocalTime;
 
 public class MainActivity extends FragmentActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bundle bundle = getIntent().getExtras();
+        Fragment fragment = findFragmentToLaunch();
+        if(fragment!=null){
+            fragment.setArguments(getIntent().getExtras());
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+        }else{
+            testAlert();
+            AlertManagerHelper.setAlerts(getApplicationContext());
+        }
+
+        /*Bundle bundle = getIntent().getExtras();
         if(bundle!=null) {
             Log.d("Output",""+bundle.get("Fragment"));
             String fragmentToLaunch = bundle.getString("Fragment");
@@ -56,32 +67,7 @@ public class MainActivity extends FragmentActivity {
             testAlert();
             AlertManagerHelper.setAlerts(getApplicationContext());
         }
-
-
-        /*
-        // Check that the activity is using the layout version with
-        // the fragment_container FrameLayout
-        if (findViewById(R.id.fragment_container) != null) {
-
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            // Create a new Fragment to be placed in the activity layout
-            Fragment firstFragment = new AlertScreenFragment();
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
-
-        }*/
+        */
     }
 
 
@@ -107,6 +93,29 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private Fragment findFragmentToLaunch(){
+        Fragment fragment = null;
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null) {
+            String fragmentToLaunch = bundle.getString(Constant.FRAGMENT_TAG);
+
+            if(fragmentToLaunch==null)
+                return fragment; // no specific fragment to launch
+
+            switch(fragmentToLaunch){
+                case Constant.FRAGMENT_ALERT_SCREEN:
+                    fragment = new AlertScreenFragment();
+
+                    break;
+
+                default:
+                    fragment = null;
+            }
+        }
+
+        return fragment;
+    }
     public void testAlert(){
         AlertModel model = new AlertModel();
 
@@ -137,7 +146,7 @@ public class MainActivity extends FragmentActivity {
         model.setAlertFeature(alertFeature);
         model.setAlertSpecs(alertSpecs);
 
-        AlertDBHelper db = new AlertDBHelper(getApplicationContext());
+        AlertDBHelper db = AlertDBHelper.getInstance(getApplicationContext());
 
         long id = db.createAlert(model);
         Log.d("SQL","adding id = "+id);

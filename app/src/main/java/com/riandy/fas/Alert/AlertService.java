@@ -23,7 +23,8 @@ public class AlertService extends Service {
 
         Intent alarmIntent = new Intent(getBaseContext(), MainActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        alarmIntent.putExtras(intent);
+        if(intent!=null)
+            alarmIntent.putExtras(intent);
         getApplication().startActivity(alarmIntent);
 
         AlertManagerHelper.setAlerts(this);

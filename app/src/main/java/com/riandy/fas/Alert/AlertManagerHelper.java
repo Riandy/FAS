@@ -36,7 +36,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
     public static void setAlerts(Context context) {
         cancelAlerts(context);
 
-        AlertDBHelper dbHelper = new AlertDBHelper(context);
+        AlertDBHelper dbHelper = AlertDBHelper.getInstance(context);
         List<AlertModel> alerts =  dbHelper.getAlerts();
         Calendar calendar = Calendar.getInstance();
 
@@ -131,7 +131,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
     public static void cancelAlerts(Context context) {
         Log.d("Alert", "all alarms cancelled");
-        AlertDBHelper dbHelper = new AlertDBHelper(context);
+        AlertDBHelper dbHelper = AlertDBHelper.getInstance(context);
 
         List<AlertModel> alerts =  dbHelper.getAlerts();
 
@@ -152,8 +152,8 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
         Bundle bundle = new Bundle();
         bundle.putString(Alert.COLUMN_NAME_ALERT_DESCRIPTION, model.getAlertFeature().getDescription());
-        bundle.putInt(ID,(int)model.id);
-        bundle.putString("Fragment","123");
+        bundle.putInt(ID, (int) model.id);
+        bundle.putString(Constant.FRAGMENT_TAG,Constant.FRAGMENT_ALERT_SCREEN);
         intent.putExtras(bundle);
 
         /*intent.putExtra(NAME, model.getAlertFeature().getName());

@@ -51,8 +51,22 @@ public class AlertDBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ALARM =
             "DROP TABLE IF EXISTS " + Alert.TABLE_NAME;
 
+    private static AlertDBHelper mInstance = null;
+
     public AlertDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static AlertDBHelper getInstance(Context ctx) {
+        if (mInstance == null) {
+            mInstance = new AlertDBHelper(ctx.getApplicationContext());
+        }
+        return mInstance;
+    }
+
+    @Override
+    public synchronized void close() {
+        super.close();
     }
 
     @Override
@@ -119,7 +133,6 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         return model;
     }
 
-    //TODO
     private boolean[] convertStringToBooleanArray(String arr){
         String[] repeatingDays = arr.split(",");
         boolean[] result = new boolean[repeatingDays.length];
@@ -130,7 +143,6 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    //TODO
     private String convertBooleanArrayToString(boolean[] arr){
 
         String repeatingDays = "";
@@ -190,6 +202,8 @@ public class AlertDBHelper extends SQLiteOpenHelper {
             return populateModel(c);
         }
 
+        c.close();
+        db.close();
         return null;
 
     }
@@ -211,6 +225,8 @@ public class AlertDBHelper extends SQLiteOpenHelper {
             return alertList;
         }
 
+        c.close();
+        db.close();
         return null;
     }
 

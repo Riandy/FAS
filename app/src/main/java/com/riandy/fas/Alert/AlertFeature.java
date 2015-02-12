@@ -31,7 +31,6 @@ public class AlertFeature {
     private String tone;
     private String appToLaunch;
     private TextToSpeech textToSpeechObj;
-    private final String TTS_ID = "TextToSpeech id=1";
 
     public AlertFeature(){
 
@@ -79,6 +78,7 @@ public class AlertFeature {
         if (isSoundEnabled && mPlayer != null) {
             mPlayer.pause();
             mPlayer.stop();
+            mPlayer.release();
         }
     }
 
