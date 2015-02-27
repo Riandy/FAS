@@ -40,6 +40,11 @@ public class AlertScreenFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         alert.getAlertFeature().stopAlerts();
     }
 

@@ -76,9 +76,12 @@ public class AlertFeature {
             vibrator.cancel();
 
         if (isSoundEnabled && mPlayer != null) {
-            mPlayer.pause();
-            mPlayer.stop();
-            mPlayer.release();
+            if(mPlayer.isPlaying()) {
+                mPlayer.pause();
+                mPlayer.stop();
+                mPlayer.reset();
+                mPlayer.release();
+            }
         }
     }
 
@@ -102,6 +105,13 @@ public class AlertFeature {
     public void launchSound(){
         //Play alarm tone
         mPlayer = new MediaPlayer();
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+
+            }
+        });
         try {
             if (tone != null && !tone.equals("")) {
                 Uri toneUri = Uri.parse(tone);
@@ -143,8 +153,6 @@ public class AlertFeature {
         notif.set_title(name);
         notif.set_content(description);
         notif.setAppToRun(appToLaunch);
-        PInfo pInfo = new PInfo(context);
-        pInfo.getPackages();
         notif.setNotification();
 
     }

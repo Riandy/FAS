@@ -116,6 +116,7 @@ public class MainActivity extends FragmentActivity {
 
         return fragment;
     }
+
     public void testAlert(){
         AlertModel model = new AlertModel();
 
