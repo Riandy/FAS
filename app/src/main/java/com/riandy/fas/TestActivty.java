@@ -1,7 +1,7 @@
 package com.riandy.fas;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.riandy.fas.Alert.AlertModel;
 
 
-public class TestActivty extends ActionBarActivity {
+public class TestActivty extends Activity {
 
     AlertModel alert;
 
@@ -52,9 +52,9 @@ public class TestActivty extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -1,15 +1,15 @@
 package com.riandy.fas;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
-import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
 import com.riandy.fas.Alert.AlertScreenFragment;
 import com.riandy.fas.Alert.AlertSpecs;
@@ -23,9 +23,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 
-public class MainActivity extends FragmentActivity {
-
-
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +32,15 @@ public class MainActivity extends FragmentActivity {
 
         Fragment fragment = findFragmentToLaunch();
         if(fragment!=null){
+            //getActionBar().show();
             fragment.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
         }else{
-            testAlert();
-            AlertManagerHelper.setAlerts(getApplicationContext());
+            //getActionBar().hide();
+            fragment = new SplashScreen();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+            //testAlert();
+            //AlertManagerHelper.setAlerts(getApplicationContext());
         }
 
         /*Bundle bundle = getIntent().getExtras();
@@ -73,21 +75,28 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.action_settings:
+                    //customize various settings
+                break;
+            case R.id.action_addAlert:
+                    //launch new fragment to add alert
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,new AddAlert()).addToBackStack("back").
+                        commit();
+                break;
+
+            case R.id.action_search:
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -106,7 +115,6 @@ public class MainActivity extends FragmentActivity {
             switch(fragmentToLaunch){
                 case Constant.FRAGMENT_ALERT_SCREEN:
                     fragment = new AlertScreenFragment();
-
                     break;
 
                 default:
@@ -150,7 +158,7 @@ public class MainActivity extends FragmentActivity {
         AlertDBHelper db = AlertDBHelper.getInstance(getApplicationContext());
 
         long id = db.createAlert(model);
-        Log.d("SQL","adding id = "+id);
+        Log.d("SQL", "adding id = " + id);
 
         //verify that database is working and able to retrieve all values
 

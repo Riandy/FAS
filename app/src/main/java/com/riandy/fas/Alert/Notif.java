@@ -1,12 +1,12 @@
 package com.riandy.fas.Alert;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.riandy.fas.R;
@@ -25,8 +25,8 @@ public class Notif {
 	public void setNotification(){
 		_icon = R.drawable.ic_launcher;
 
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(_ctx)
+		Notification.Builder mBuilder =
+		        new Notification.Builder(_ctx)
 		        .setSmallIcon(_icon)
 		        .setContentTitle(_title)
 		        .setContentText(_content);
@@ -53,8 +53,8 @@ public class Notif {
 	public void setNotification(Class<?> callback, String title, String content, int icon) {
 		
 		_icon = icon != 0 ? icon : R.drawable.ic_launcher;
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(_ctx)
+		Notification.Builder mBuilder =
+		        new Notification.Builder(_ctx)
 		        .setSmallIcon(_icon)
 		        .setContentTitle(title)
 		        .setContentText(content);
