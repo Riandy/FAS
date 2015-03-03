@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.riandy.fas.Alert.AddAlertFeature;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -22,7 +24,11 @@ public class AddAlert extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_alert, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_alert, container, false);
+
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs,new AddAlertOneOffEvent()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_feature, new AddAlertFeature()).commit();
+        return view;
     }
 
 

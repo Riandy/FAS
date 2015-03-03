@@ -1,11 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.riandy.fas.TestActivty">
+    android:layout_height="match_parent" tools:context="com.riandy.fas.AddAlertOneOffEvent">
 
+    <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,50 +30,35 @@
                     android:text="Date &amp; Time"
                     android:id="@+id/textView9" />
 
-                <AnalogClock
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="10:40 am"
                     android:id="@+id/startTime"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="40sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Monday, 2 March 2015"
-                    android:id="@+id/textView8"
+                    android:id="@+id/startDate"
                     android:layout_below="@+id/startTime"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/layout_date_range_alert">
-
-                <View style="@style/Divider"/>
-
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Start date"
-                    android:id="@+id/textView10" />
+                    android:text="Save Alert"
+                    android:id="@+id/button2"
+                    android:layout_gravity="right" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="End date"
-                    android:id="@+id/textView11" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
-
-</RelativeLayout>
+</FrameLayout>

@@ -1,9 +1,67 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.riandy.fas.AddAlert">
+    android:orientation="vertical"
+    android:layout_height="match_parent" tools:context="com.riandy.fas.AddAlert"
+    android:padding="10dp"
+    android:weightSum="1">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:hint="Alert Name"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:hint="Description"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Is this a one-off alert?"
+        android:id="@+id/switch1"
+        android:checked="true"
+        android:layout_below="@+id/editText2"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_alignStart="@+id/editText2"
+        android:textOff="NO"
+        android:textOn="YES"
+        android:enabled="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="0dp" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Customize alert features?"
+        android:id="@+id/switch2"
+        android:checked="false"
+        android:textOff="NO"
+        android:textOn="YES"
+        android:layout_marginBottom="10dp" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_container_add_alert_specs">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_container_add_alert_feature"></FrameLayout>
+
+
+</LinearLayout>

@@ -10,4 +10,18 @@
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/customactionbar_bg</item>
     </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+        <declare-styleable name="AnalogClock">
+            <attr name="dial" format="reference"/>
+            <attr name="hand_hour" format="reference"/>
+            <attr name="hand_minute" format="reference"/>
+        </declare-styleable>
 </resources>
