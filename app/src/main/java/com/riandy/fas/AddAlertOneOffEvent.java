@@ -95,7 +95,6 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
     //package all the info and then send it to the parent activity
     private void saveAlert(){
         AlertModel model = new AlertModel();
-
         model.setEnabled(true);
     }
 

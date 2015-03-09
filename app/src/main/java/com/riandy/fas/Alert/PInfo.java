@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class PInfo {
 		
 	}
 	private void prettyPrint() {
-		Log.d("HELLO",appname + "\t" + pname + "\t" + versionName + "\t" + versionCode);
+		//Log.d("HELLO",appname + "\t" + pname + "\t" + versionName + "\t" + versionCode);
 	}
 
 	public ArrayList<PInfo> getPackages() {
