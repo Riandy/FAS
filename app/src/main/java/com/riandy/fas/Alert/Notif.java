@@ -46,7 +46,7 @@ public class Notif {
         NotificationManager mNotificationManager =
 		    (NotificationManager) _ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
-		int mId = 012314;
+		int mId = 12314;
 		mNotificationManager.notify(mId, mBuilder.build());		
 	}
 	
@@ -81,7 +81,7 @@ public class Notif {
 		NotificationManager mNotificationManager =
 		    (NotificationManager) _ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
-		int mId = 01234;
+		int mId = 1234;
 		mNotificationManager.notify(mId, mBuilder.build());		
 		
 	}	

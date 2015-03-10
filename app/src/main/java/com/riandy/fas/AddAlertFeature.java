@@ -1,8 +1,13 @@
 package com.riandy.fas;
 
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +22,16 @@ import com.riandy.fas.Alert.AlertFeature;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddAlertFeature extends Fragment {
+public class AddAlertFeature extends Fragment implements SelectAppToRun.OnSelectAppListener {
 
+    private static final int TAG_SELECT_APP = 54;
     private Switch soundSwitch, notificationSwitch, launchAppSwitch, vibrateSwitch, voiceInstructionSwitch;
     private Button selectSound, selectApp;
     private TextView soundURL, appSelected;
     private LinearLayout soundLayout, launchAppLayout;
 
     OnAddAlertFeatureListener callback;
+    Fragment frag;
 
     public interface OnAddAlertFeatureListener {
         public void onAddFeatureData(String tag, Object data);
@@ -46,6 +53,8 @@ public class AddAlertFeature extends Fragment {
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_add_alert_feature, container, false);
+
+        frag = this;
 
         soundSwitch = (Switch) view.findViewById(R.id.switch_sound);
         notificationSwitch = (Switch) view.findViewById(R.id.switch_notification);
@@ -109,7 +118,8 @@ public class AddAlertFeature extends Fragment {
         selectSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundURL.setText("");
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                startActivityForResult(intent , 1);
                 callback.onAddFeatureData(AlertFeature.TAG_SOUND_URL,"null");
             }
         });
@@ -117,9 +127,9 @@ public class AddAlertFeature extends Fragment {
         selectApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                appSelected.setText("");
-                callback.onAddFeatureData(AlertFeature.TAG_APP_SELECTED,"null");
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,new SelectAppToRun()).addToBackStack(null).commit();
+                Fragment fragment = new SelectAppToRun();
+                fragment.setTargetFragment(frag,TAG_SELECT_APP);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
             }
         });
         return view;
@@ -162,4 +172,30 @@ public class AddAlertFeature extends Fragment {
             launchAppLayout.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onSelectApp(String tag, String data) {
+        appSelected.setText(data);
+        callback.onAddFeatureData(AlertFeature.TAG_APP_SELECTED, data);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case 1:
+                    //alarmDetails.alarmTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    //txtToneSelection.setText(RingtoneManager.getRingtone(this, alarmDetails.alarmTone).getTitle(this));
+                    Log.d("Tone","Yes");
+                    Uri tone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    callback.onAddFeatureData(AlertFeature.TAG_SOUND_URL,tone);
+                    soundURL.setText(RingtoneManager.getRingtone(frag.getActivity().getApplicationContext(), tone).getTitle(frag.getActivity().getApplicationContext()));
+                    break;
+                default: {
+                    break;
+                }
+            }
+        }
+    }
 }

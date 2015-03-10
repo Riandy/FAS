@@ -132,7 +132,7 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setSoundEnabled((boolean)data);
                 break;
             case AlertFeature.TAG_SOUND_URL:
-                alert.getAlertFeature().setTone((String)data);
+                alert.getAlertFeature().setTone(data.toString());
                 break;
             case AlertFeature.TAG_VIBRATE_SWITCH:
                 alert.getAlertFeature().setVibrationEnabled((boolean)data);

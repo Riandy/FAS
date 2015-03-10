@@ -19,15 +19,27 @@ import java.util.List;
  */
 public class SelectAppToRun extends Fragment {
 
+    OnSelectAppListener callback;
 
     public SelectAppToRun() {
         // Required empty public constructor
     }
 
 
+    public interface OnSelectAppListener {
+        public void onSelectApp(String tag, String data);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        try {
+            callback = (OnSelectAppListener) getTargetFragment();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Calling Fragment must implement OnSelectAppListener");
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_app_to_run, container, false);
 
@@ -44,11 +56,8 @@ public class SelectAppToRun extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
+                callback.onSelectApp("appSelected",appList.get(position).getAppname());
                 getFragmentManager().popBackStackImmediate();
-//                Intent returnIntent = new Intent();
-//                returnIntent.putExtra("appSelected", appList.get(position).getAppname());
-//                setResult(RESULT_OK,returnIntent);
-//                finish();
             }
         });
 

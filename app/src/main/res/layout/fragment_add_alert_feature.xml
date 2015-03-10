@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="&lt;&lt;No Sound Selected>>"
+                android:text="Select an alert tone"
                 android:id="@+id/sound_url"
                 android:layout_weight="0.5" />
 

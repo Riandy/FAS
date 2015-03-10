@@ -84,12 +84,12 @@ public class AlertFeature {
             vibrator.cancel();
 
         if (isSoundEnabled && mPlayer != null) {
-            if(mPlayer.isPlaying()) {
-                mPlayer.pause();
-                mPlayer.stop();
-                mPlayer.reset();
+            //if(mPlayer.isPlaying()) {
+            //    mPlayer.pause();
+            //    mPlayer.stop();
+            //    mPlayer.reset();
                 mPlayer.release();
-            }
+            //}
         }
     }
 
@@ -151,7 +151,7 @@ public class AlertFeature {
                 throw new PackageManager.NameNotFoundException();
             i.addCategory(Intent.CATEGORY_LAUNCHER);
             context.startActivity(i);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException ignored) {
 
         }
     }
