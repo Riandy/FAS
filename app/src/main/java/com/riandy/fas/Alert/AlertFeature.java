@@ -22,6 +22,14 @@ import java.util.Locale;
  */
 public class AlertFeature {
 
+    public static final String TAG_SOUND_SWITCH = "soundSwitch";
+    public static final String TAG_NOTIF_SWITCH = "notifSwitch";
+    public static final String TAG_LAUNCH_APP_SWITCH = "launchAppSwitch";
+    public static final String TAG_VIBRATE_SWITCH = "vibrateSwitch";
+    public static final String TAG_VOICE_SWITCH = "voiceSwitch";
+    public static final String TAG_SOUND_URL = "soundURL";
+    public static final String TAG_APP_SELECTED = "appSelected";
+
     private Context context;
     private Vibrator vibrator;
     private String name;

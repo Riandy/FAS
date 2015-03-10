@@ -9,18 +9,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 
+import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
+import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.DaySpecs;
+import com.riandy.fas.Alert.HourSpecs;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+
+import java.util.Calendar;
 
 
-public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeatureListener {
+public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeatureListener, AddAlertOneOffEvent.OnAddAlertOneOffEventListener{
 
     private static final int ADD_FEATURE_FRAGMENT = 1234;
-    Switch customizedFeature;
+    private static final int ADD_SPECS_FRAGMENT = 1222;
+
+    Switch customizedFeature,customizedSpecs;
     Button saveAlert;
+    EditText alertName,alertDescription;
+
     AlertModel alert;
+    Fragment me;
 
     public AddAlert() {
         // Required empty public constructor
@@ -38,32 +54,31 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
             Log.d("DEBUG","new alert model created");
         }
 
-        Fragment addAlertSpecsFragment = getFragmentManager().findFragmentById(R.id.fragment_container_add_alert_specs);
-        Fragment addAlertFeatureFragment = getFragmentManager().findFragmentById(R.id.fragment_container_add_alert_feature);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, new AddAlertOneOffEvent()).commit();
+        final Fragment addAlertSpecs = new AddAlertOneOffEvent();
+        addAlertSpecs.setTargetFragment(this, ADD_SPECS_FRAGMENT);
+        addAlertSpecs.setArguments(getAddSpecsBundle());
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, addAlertSpecs).commit();
 
-        Fragment newFragment = new AddAlertFeature();
-        newFragment.setTargetFragment(this,ADD_FEATURE_FRAGMENT);
-        newFragment.setArguments(getAddFeatureBundle());
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_feature, newFragment).commit();
+        Fragment addAlertFeature = new AddAlertFeature();
+        addAlertFeature.setTargetFragment(this, ADD_FEATURE_FRAGMENT);
+        addAlertFeature.setArguments(getAddFeatureBundle());
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_feature, addAlertFeature).commit();
 
-//        if(addAlertSpecsFragment==null) {
-//            getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, new AddAlertOneOffEvent()).commit();
-//        }else{
-//            view.findViewById(R.id.fragment_container_add_alert_specs).setVisibility(View.VISIBLE);
-//        }
-//        if(addAlertFeatureFragment==null) {
-//            Fragment newFragment = new AddAlertFeature();
-//            newFragment.setTargetFragment(this,ADD_FEATURE_FRAGMENT);
-//            getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_feature, newFragment).commit();
-//            view.findViewById(R.id.fragment_container_add_alert_feature).setVisibility(View.GONE);
-//        }else{
-//            view.findViewById(R.id.fragment_container_add_alert_feature).setVisibility(View.VISIBLE);
-//
-//        }
+        //refactor this later
+        me = this;
 
         customizedFeature = (Switch) view.findViewById(R.id.switch_customize_alert_feature);
+        saveAlert = (Button) view.findViewById(R.id.button_save_alert);
+        customizedSpecs = (Switch) view.findViewById(R.id.switch_alert_specs);
+        alertName = (EditText) view.findViewById(R.id.editText_alert_name);
+        alertDescription = (EditText) view.findViewById(R.id.editText_alert_desciption);
+
+        if(customizedFeature.isChecked())
+            view.findViewById(R.id.fragment_container_add_alert_feature).setVisibility(View.VISIBLE);
+        else
+            view.findViewById(R.id.fragment_container_add_alert_feature).setVisibility(View.GONE);
+
         customizedFeature.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -76,16 +91,25 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
             }
         });
 
-        saveAlert = (Button) view.findViewById(R.id.button_save_alert);
+        customizedSpecs.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    addAlertSpecs.setArguments(getAddSpecsBundle());
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, addAlertSpecs).commit();
+                }else{
+                    getFragmentManager().beginTransaction().remove(addAlertSpecs).commit();
+                }
+            }
+        });
         saveAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddAlertFeature alertFeatureFragment = (AddAlertFeature)getFragmentManager().findFragmentById(R.id.fragment_container_add_alert_feature);
-
-                //AddAlertOneOffEvent alertSpecs = (AddAlertOneOffEvent)getFragmentManager().findFragmentById(R.id.fragment_container_add_alert_specs);
-
-                AlertFeature alertFeature = alertFeatureFragment.getData();
-                Log.d("TEST",""+alertFeature.isLaunchAppEnabled()+alertFeature.isSoundEnabled());
+                alert.getAlertFeature().setName(alertName.getText().toString());
+                alert.getAlertFeature().setDescription(alertDescription.getText().toString());
+                AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
+                long id = db.createAlert(alert);
+                AlertManagerHelper.setAlerts(view.getContext());
             }
         });
 
@@ -93,33 +117,27 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("ADD ALERT","SAVING");
-    }
-
-    @Override
     public void onAddFeatureData(String tag, Object data) {
         switch (tag){
-            case AddAlertFeature.TAG_APP_SELECTED:
+            case AlertFeature.TAG_APP_SELECTED:
                 alert.getAlertFeature().setAppToLaunch((String)data);
                 break;
-            case AddAlertFeature.TAG_LAUNCH_APP_SWITCH:
+            case AlertFeature.TAG_LAUNCH_APP_SWITCH:
                 alert.getAlertFeature().setLaunchAppEnabled((boolean)data);
                 break;
-            case AddAlertFeature.TAG_NOTIF_SWITCH:
+            case AlertFeature.TAG_NOTIF_SWITCH:
                 alert.getAlertFeature().setNotificationEnabled((boolean)data);
                 break;
-            case AddAlertFeature.TAG_SOUND_SWITCH:
+            case AlertFeature.TAG_SOUND_SWITCH:
                 alert.getAlertFeature().setSoundEnabled((boolean)data);
                 break;
-            case AddAlertFeature.TAG_SOUND_URL:
+            case AlertFeature.TAG_SOUND_URL:
                 alert.getAlertFeature().setTone((String)data);
                 break;
-            case AddAlertFeature.TAG_VIBRATE_SWITCH:
+            case AlertFeature.TAG_VIBRATE_SWITCH:
                 alert.getAlertFeature().setVibrationEnabled((boolean)data);
                 break;
-            case AddAlertFeature.TAG_VOICE_SWITCH:
+            case AlertFeature.TAG_VOICE_SWITCH:
                 alert.getAlertFeature().setVoiceInstructionStatusEnabled((boolean)data);
                 break;
 
@@ -127,15 +145,41 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         }
     }
 
+    @Override
+    public void onAddSpecsData(String tag, Object data) {
+        switch (tag){
+            case DaySpecs.TAG_STARTDATE:
+                LocalDate date = new LocalDate(((Calendar)data).get(Calendar.YEAR),((Calendar)data).get(Calendar.MONTH)+1,((Calendar)data).get(Calendar.DAY_OF_MONTH));
+                alert.getAlertSpecs().getDaySpecs().setDate(date);
+                Log.d("Stored",alert.getAlertSpecs().getDaySpecs().getStartDate().toString());
+                break;
+            case DaySpecs.TAG_ENDDATE:
+                break;
+            case HourSpecs.TAG_STARTTIME:
+                LocalTime time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE));
+                alert.getAlertSpecs().getHourSpecs().setExactTime(time);
+                break;
+            case HourSpecs.TAG_ENDTIME:
+                break;
+        }
+    }
+
     public Bundle getAddFeatureBundle() {
         Bundle data = new Bundle();
-        data.putBoolean(AddAlertFeature.TAG_SOUND_SWITCH,alert.getAlertFeature().isSoundEnabled());
-        data.putBoolean(AddAlertFeature.TAG_NOTIF_SWITCH,alert.getAlertFeature().isNotificationEnabled());
-        data.putBoolean(AddAlertFeature.TAG_LAUNCH_APP_SWITCH,alert.getAlertFeature().isLaunchAppEnabled());
-        data.putBoolean(AddAlertFeature.TAG_VIBRATE_SWITCH,alert.getAlertFeature().isVibrationEnabled());
-        data.putBoolean(AddAlertFeature.TAG_VOICE_SWITCH,alert.getAlertFeature().isVoiceInstructionStatusEnabled());
-        data.putString(AddAlertFeature.TAG_SOUND_URL,alert.getAlertFeature().getTone());
-        data.putString(AddAlertFeature.TAG_APP_SELECTED,alert.getAlertFeature().getAppToLaunch());
+        data.putBoolean(AlertFeature.TAG_SOUND_SWITCH, alert.getAlertFeature().isSoundEnabled());
+        data.putBoolean(AlertFeature.TAG_NOTIF_SWITCH,alert.getAlertFeature().isNotificationEnabled());
+        data.putBoolean(AlertFeature.TAG_LAUNCH_APP_SWITCH,alert.getAlertFeature().isLaunchAppEnabled());
+        data.putBoolean(AlertFeature.TAG_VIBRATE_SWITCH,alert.getAlertFeature().isVibrationEnabled());
+        data.putBoolean(AlertFeature.TAG_VOICE_SWITCH,alert.getAlertFeature().isVoiceInstructionStatusEnabled());
+        data.putString(AlertFeature.TAG_SOUND_URL,alert.getAlertFeature().getTone());
+        data.putString(AlertFeature.TAG_APP_SELECTED,alert.getAlertFeature().getAppToLaunch());
+        return data;
+    }
+
+    public Bundle getAddSpecsBundle() {
+        Bundle data = new Bundle();
+        data.putString(DaySpecs.TAG_STARTDATE, alert.getAlertSpecs().getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
+        data.putString(HourSpecs.TAG_STARTTIME, alert.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
         return data;
     }
 }

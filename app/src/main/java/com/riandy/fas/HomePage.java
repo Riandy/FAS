@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.riandy.fas.Alert.AlertDBHelper;
 
 
 public class HomePage extends Fragment {
+
+    ListView list;
 
     public HomePage() {
         // Required empty public constructor
@@ -17,7 +22,13 @@ public class HomePage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
+
+        list = (ListView) view.findViewById(R.id.listView_alert);
+        AlertsArrayAdapter adapter = new AlertsArrayAdapter(view.getContext(), AlertDBHelper.getInstance(view.getContext()).getAlerts());
+        list.setAdapter(adapter);
+        return view;
     }
 
 

@@ -43,16 +43,21 @@ public class AlertManagerHelper extends BroadcastReceiver {
         for (AlertModel alert : alerts) {
 
             if(alert.isEnabled()) {
+                //Log.d("Alert", "alert enabled");
                 LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs());
                 LocalTime localTime = getValidTime(alert.getAlertSpecs().getHourSpecs());
                 if(localDate == null || localTime == null)
                     continue;
                 calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
                         localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
-                if(calendar.before(Calendar.getInstance())) // date has passed. just continue;
+                if(calendar.before(Calendar.getInstance())) { // date has passed. just continue;
+                    Log.d("Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
                     continue;
+                }
                 PendingIntent pIntent = createPendingIntent(context, alert);
                 setAlert(context,calendar,pIntent);
+            }else{
+                Log.d("Alert", "alert not enabled");
             }
         }
 

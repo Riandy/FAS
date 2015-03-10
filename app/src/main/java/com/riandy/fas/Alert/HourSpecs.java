@@ -1,5 +1,7 @@
 package com.riandy.fas.Alert;
 
+import android.util.Log;
+
 import org.joda.time.LocalTime;
 
 /**
@@ -7,12 +9,22 @@ import org.joda.time.LocalTime;
  */
 public class HourSpecs {
 
+    public static final String TAG_STARTTIME = "startTime";
+    public static final String TAG_ENDTIME = "endTime";
+
     public enum HourTypes {EXACTTIME, TIMERANGE, RANDOM};
 
     HourTypes type;
     LocalTime startTime, endTime, lastAlertTime;
     int intervalInHour;
     int numOfTimes,currentCounter;
+
+
+    HourSpecs() {
+        startTime = new LocalTime();
+        endTime = new LocalTime();
+        type = HourTypes.EXACTTIME;
+    }
 
     // Exact time = one timing
 
@@ -30,6 +42,7 @@ public class HourSpecs {
     public void setExactTime(LocalTime time){
         startTime = time;
         endTime = time;
+        Log.d("startTime",time.toString());
     }
 
     public void setTimeRange(LocalTime startTime, LocalTime endTime, int intervalInHour ){

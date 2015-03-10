@@ -5,6 +5,9 @@ package com.riandy.fas.Alert;
  */
 public class AlertSpecs {
 
+    public static final String TAG_DAY_SPECS = "daySpecs";
+    public static final String TAG_HOUR_SPECS = "hourSpecs";
+
     private DaySpecs daySpecs;
     private HourSpecs hourSpecs;
 

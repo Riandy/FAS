@@ -5,12 +5,15 @@ import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.DaySpecs;
+import com.riandy.fas.Alert.HourSpecs;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,6 +39,12 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
     public static final String TAG_MONTH = "month";
     public static final String TAG_DAY = "day";
 
+    OnAddAlertOneOffEventListener callback;
+
+    public interface OnAddAlertOneOffEventListener {
+        public void onAddSpecsData(String tag, Object data);
+    }
+
     public AddAlertOneOffEvent() {
         // Required empty public constructor
     }
@@ -44,6 +53,13 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        try {
+            callback = (OnAddAlertOneOffEventListener) getTargetFragment();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Calling Fragment must implement OnAddAlertOneOffEventListener");
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_alert_one_off_event, container, false);
 
@@ -52,6 +68,8 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
 
         startTime = (TextView) view.findViewById(R.id.startTime);
         startDate = (TextView) view.findViewById(R.id.startDate);
+
+        setupInitialValues(getArguments());
 
         startTime.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -103,12 +121,22 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
         date.set(year,month,day);
         startDate.setText(dateFormat.format(date.getTime()));
+        callback.onAddSpecsData(DaySpecs.TAG_STARTDATE,date);
     }
 
     @Override
     public void onAddTimeSubmit(int hourOfDay, int minute) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aaa");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss aaa");
         time.set(0,0,0,hourOfDay,minute);
         startTime.setText(dateFormat.format(time.getTime()));
+        Log.d("Change Time to",time.getTime().toString());
+        callback.onAddSpecsData(HourSpecs.TAG_STARTTIME,time);
+    }
+
+    private void setupInitialValues(Bundle data){
+        if(data==null)
+            throw new NullPointerException("cannot setup values, bundle is null.");
+        startDate.setText(data.getString(DaySpecs.TAG_STARTDATE));
+        startTime.setText(data.getString(HourSpecs.TAG_STARTTIME));
     }
 }

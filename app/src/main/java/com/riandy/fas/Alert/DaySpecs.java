@@ -9,6 +9,9 @@ import java.util.Calendar;
  */
 public class DaySpecs {
 
+    public static final String TAG_STARTDATE = "startDate";
+    public static final String TAG_ENDDATE = "endDate";
+
     public static final int SUNDAY = 0;
     public static final int MONDAY = 1;
     public static final int TUESDAY = 2;
@@ -26,7 +29,10 @@ public class DaySpecs {
     private boolean repeatWeekly;
 
     DaySpecs(){
+        startDate = new LocalDate();
+        endDate = new LocalDate();
         dayOfWeek = new boolean[7];
+        type = DayTypes.DATEONLY;
     }
 
     public void setDayType(DayTypes type){
