@@ -16,7 +16,7 @@ public class AlertModel implements Parcelable{
     private AlertSpecs alertSpecs;
 
     private boolean isEnabled;
-    long id;
+    public long id;
 
     public AlertModel() {
         alertFeature = new AlertFeature();
