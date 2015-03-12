@@ -32,13 +32,14 @@ public class AlertFeature {
 
     private Context context;
     private Vibrator vibrator;
+    private MediaPlayer mPlayer;
+    private TextToSpeech textToSpeechObj;
+
     private String name;
     private String description;
     private boolean isVibrationEnabled, isVoiceInstructionStatusEnabled, isSoundEnabled, isLaunchAppEnabled, isNotificationEnabled;
-    private MediaPlayer mPlayer;
     private String tone;
     private String appToLaunch;
-    private TextToSpeech textToSpeechObj;
 
     public AlertFeature(){
 

@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.AlertSpecs;
 import com.riandy.fas.Alert.DaySpecs;
 import com.riandy.fas.Alert.HourSpecs;
+
+import org.joda.time.format.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -110,14 +112,8 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
         newFragment.show(getFragmentManager(),"datePicker");
     }
 
-    //package all the info and then send it to the parent activity
-    private void saveAlert(){
-        AlertModel model = new AlertModel();
-        model.setEnabled(true);
-    }
-
     @Override
-    public void onAddDateSubmit(int year, int month, int day){
+    public void onAddDateSubmit(int year, int month, int day, String tag){
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
         date.set(year,month,day);
         startDate.setText(dateFormat.format(date.getTime()));
@@ -125,7 +121,7 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
     }
 
     @Override
-    public void onAddTimeSubmit(int hourOfDay, int minute) {
+    public void onAddTimeSubmit(int hourOfDay, int minute, String tag) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss aaa");
         time.set(0,0,0,hourOfDay,minute);
         startTime.setText(dateFormat.format(time.getTime()));
@@ -136,7 +132,10 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
     private void setupInitialValues(Bundle data){
         if(data==null)
             throw new NullPointerException("cannot setup values, bundle is null.");
-        startDate.setText(data.getString(DaySpecs.TAG_STARTDATE));
-        startTime.setText(data.getString(HourSpecs.TAG_STARTTIME));
+        AlertSpecs alertSpecs = data.getParcelable(AlertSpecs.TAG_ALERT_SPECS);
+
+        startDate.setText(alertSpecs.getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
+        startTime.setText(alertSpecs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+
     }
 }

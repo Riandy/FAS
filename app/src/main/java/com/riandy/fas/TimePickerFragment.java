@@ -18,9 +18,12 @@ public class TimePickerFragment extends DialogFragment
 
     public static final String TAG_HOUR_OF_DAY = "hourOfDay";
     public static final String TAG_MINUTE = "minute";
+    public static final String TAG_TIMETYPE = "timeType";
+
+    String tag;
 
     public interface OnTimePickerListener {
-        public void onAddTimeSubmit(int hourOfDay, int minute);
+        public void onAddTimeSubmit(int hourOfDay, int minute, String tag);
     }
 
     @Override
@@ -42,6 +45,7 @@ public class TimePickerFragment extends DialogFragment
         final Calendar c = Calendar.getInstance();
         int hour = (int) getArguments().get(TAG_HOUR_OF_DAY);
         int minute = (int) getArguments().get(TAG_MINUTE);
+        tag = (String) getArguments().get(TAG_TIMETYPE);
 
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), this, hour, minute,
@@ -51,6 +55,6 @@ public class TimePickerFragment extends DialogFragment
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
         if(callback!=null)
-            callback.onAddTimeSubmit(hourOfDay,+minute);
+            callback.onAddTimeSubmit(hourOfDay,minute,tag);
     }
 }

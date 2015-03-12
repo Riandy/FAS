@@ -1,0 +1,279 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.riandy.fas.AddAlertSpecs"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Day Specifications"
+        android:id="@+id/textView5"/>
+
+    <View style="@style/Divider"/>
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Unlimited"
+        android:id="@+id/switch_unlimited_date_range"
+        android:checked="false" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_dateRange">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Start date"
+            android:id="@+id/textView_startDate"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="End date"
+            android:id="@+id/textView_endDate"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jhhj"
+            android:id="@+id/toggleButton_sun"
+            android:textOff="Sun"
+            android:textOn="Sun"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_mon"
+            android:checked="false"
+            android:textOff="Mon"
+            android:textOn="Mon"
+            android:layout_margin="0dp"
+            android:layout_weight="0.1428"
+            android:padding="0dp" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_tue"
+            android:textOff="Tue"
+            android:textOn="Tue"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_wed"
+            android:textOff="Wed"
+            android:textOn="Wed"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_thu"
+            android:textOff="Thu"
+            android:textOn="Thu"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_fri"
+            android:textOff="Fri"
+            android:textOn="Fri"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton_sat"
+            android:textOff="Sat"
+            android:textOn="Sat"
+            android:layout_weight="0.1428"
+            android:padding="0dp"
+            android:checked="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Every N days. Specify N"
+            android:id="@+id/textView12"
+            android:layout_gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_everyNDays"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+    <View style="@style/Divider"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Time Specifications"
+        android:id="@+id/textView16" />
+    <View style="@style/Divider"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frequency"
+        android:id="@+id/textView22" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:focusableInTouchMode="false"
+        android:id="@+id/radioGroup_frequency">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Once"
+            android:id="@+id/radioButton_once"
+            android:checked="false"
+            android:layout_weight="0.92" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More than once"
+            android:id="@+id/radioButton_moreThanOnce"
+            android:checked="false"
+            android:layout_weight="0.5" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/layout_moreThanOnce">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start time"
+            android:id="@+id/textView18" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="10:40 am"
+            android:id="@+id/textView_startTime"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End time"
+            android:id="@+id/textView20" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="10:59 am"
+            android:id="@+id/textView_endTime"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup_freqX">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Every X hours"
+                android:id="@+id/radioButton_everyXHours"
+                android:checked="false"
+                android:layout_weight="0.5" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Random X times"
+                android:id="@+id/radioButton_randomXTimes"
+                android:checked="false"
+                android:layout_weight="0.5" />
+        </RadioGroup>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_numOfTimes"
+            android:hint="Specify X" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_once">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="10:40 am"
+            android:id="@+id/textView_startTimeOnce"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+</LinearLayout>

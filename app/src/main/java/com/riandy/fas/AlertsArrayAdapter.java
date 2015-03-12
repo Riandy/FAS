@@ -42,4 +42,12 @@ public class AlertsArrayAdapter extends ArrayAdapter {
 
         return rowView;
     }
+
+    @Override
+    public int getCount(){
+        if(list==null)
+            return 0;
+        else
+            return list.size();
+    }
 }

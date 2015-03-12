@@ -11,6 +11,9 @@ public class DaySpecs {
 
     public static final String TAG_STARTDATE = "startDate";
     public static final String TAG_ENDDATE = "endDate";
+    public static final String TAG_DAYTYPE = "daytype";
+    public static final String TAG_DAYOFWEEK = "dayOfWeek";
+    public static final String TAG_EVERYNDAYS = "everyNdays";
 
     public static final int SUNDAY = 0;
     public static final int MONDAY = 1;
@@ -27,6 +30,7 @@ public class DaySpecs {
     private LocalDate startDate,endDate;
     private boolean dayOfWeek[];
     private boolean repeatWeekly;
+    private int everyNDays;
 
     DaySpecs(){
         startDate = new LocalDate();
@@ -113,4 +117,11 @@ public class DaySpecs {
         repeatWeekly = status;
     }
 
+    public int getEveryNDays() {
+        return everyNDays;
+    }
+
+    public void setEveryNDays(int everyNDays) {
+        this.everyNDays = everyNDays;
+    }
 }

@@ -11,13 +11,15 @@ public class HourSpecs {
 
     public static final String TAG_STARTTIME = "startTime";
     public static final String TAG_ENDTIME = "endTime";
+    public static final String TAG_HOURTYPE = "hourType";
+    public static final String TAG_INTERVAL_OR_NUMOFTIMES = "intervalOrNumOfTimes";
 
     public enum HourTypes {EXACTTIME, TIMERANGE, RANDOM};
 
-    HourTypes type;
-    LocalTime startTime, endTime, lastAlertTime;
-    int intervalInHour;
-    int numOfTimes,currentCounter;
+    private HourTypes type;
+    private LocalTime startTime, endTime, lastAlertTime;
+    private int intervalInHour;
+    private int numOfTimes,currentCounter;
 
 
     HourSpecs() {
@@ -65,10 +67,6 @@ public class HourSpecs {
     public void setIntervalInHour(int interval) { intervalInHour = interval; }
 
     public void setNumOfTimes(int num) { numOfTimes = num; }
-
-    public HourTypes getHourTypes(){
-        return type;
-    }
 
     public LocalTime getStartTime(){
         return startTime;

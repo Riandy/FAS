@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +62,12 @@ public class HomePage extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Short press", "yes");
-
+                Bundle data = new Bundle();
+                data.putParcelable(AlertModel.TAG_ALERT_MODEL,alertList.get(position));
+                Fragment fragment = new AddAlert();
+                fragment.setArguments(data);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).
+                        commit();
             }
         });
         return view;

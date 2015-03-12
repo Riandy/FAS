@@ -14,11 +14,14 @@ public class DatePickerFragment extends DialogFragment
     public static final String TAG_YEAR = "year";
     public static final String TAG_MONTH = "month";
     public static final String TAG_DAY = "day";
+    public static final String TAG_DATETYPE = "dateType";
+
+    String tag;
 
     private OnDatePickerListener callback;
 
     public interface OnDatePickerListener {
-        public void onAddDateSubmit(int year, int month, int day);
+        public void onAddDateSubmit(int year, int month, int day, String tag);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class DatePickerFragment extends DialogFragment
         int year = (int) getArguments().get(TAG_YEAR);
         int month = (int) getArguments().get(TAG_MONTH);
         int day = (int) getArguments().get(TAG_DAY);
-
+        tag = (String) getArguments().get(TAG_DATETYPE);
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
@@ -45,7 +48,7 @@ public class DatePickerFragment extends DialogFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
         if(callback!=null)
-            callback.onAddDateSubmit(year,month,day);
+            callback.onAddDateSubmit(year,month,day,tag);
     }
 
 }

@@ -1,16 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.riandy.fas.Alert.AlertScreenFragment">
+    android:layout_height="match_parent" tools:context="com.riandy.fas.Alert.AlertScreenFragment"
+    android:orientation="vertical"
+    android:paddingTop="100dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_gravity="center" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Alert Name"
+        android:id="@+id/textView_alertName"
+        android:textSize="30dp"
+        android:gravity="center" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Alert Description"
+        android:id="@+id/textView_alertDescription"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:paddingTop="10dp" />
+</LinearLayout>

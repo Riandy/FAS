@@ -3,6 +3,7 @@ package com.riandy.fas.Alert;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.riandy.fas.MainActivity;
 
@@ -25,6 +26,7 @@ public class AlertService extends Service {
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if(intent!=null)
             alarmIntent.putExtras(intent);
+        Log.d("READING",""+intent.getExtras().getInt("id"));
         getApplication().startActivity(alarmIntent);
 
         AlertManagerHelper.setAlerts(this);
