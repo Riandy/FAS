@@ -31,6 +31,9 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
 
     private static final int ADD_FEATURE_FRAGMENT = 1234;
     private static final int ADD_SPECS_FRAGMENT = 1222;
+    public static final String TAG_IS_NEW_ALERT = "newAlert";
+
+    boolean isNewAlert;
 
     Switch customizedFeature,customizedSpecs;
     Button saveAlert;
@@ -52,14 +55,16 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_add_alert, container, false);
 
-        if(alert==null){
-            alert = new AlertModel();
-            Log.d("DEBUG","new alert model created");
-        }
-
         if(getArguments()!=null){
             Log.d("alert model","received");
             alert = getArguments().getParcelable(AlertModel.TAG_ALERT_MODEL);
+            isNewAlert = false;
+        }
+
+        if(alert==null){
+            alert = new AlertModel();
+            isNewAlert = true;
+            Log.d("DEBUG","new alert model created");
         }
 
         //refactor this later
@@ -127,8 +132,18 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setName(alertName.getText().toString());
                 alert.getAlertFeature().setDescription(alertDescription.getText().toString());
                 AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
-                long id = db.createAlert(alert);
+
+                if(isNewAlert){
+                    //save it. create new alert
+                    long id = db.createAlert(alert);
+                    Log.d("new alert",""+id+" created");
+                }else{
+                    //save only the changes.
+                    long id = db.updateAlert(alert);
+                    Log.d("update alert",""+id+" updated");
+                }
                 AlertManagerHelper.setAlerts(view.getContext());
+                getFragmentManager().popBackStack();
             }
         });
 

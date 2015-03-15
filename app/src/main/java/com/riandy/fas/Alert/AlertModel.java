@@ -98,6 +98,34 @@ public class AlertModel implements Parcelable{
 
     }
 
+    @Override
+    public String toString(){
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("id="+id);
+        sb.append(" name="+alertFeature.getName());
+        sb.append(" desc="+alertFeature.getDescription());
+        sb.append(" appToLaunch="+alertFeature.getAppToLaunch());
+        sb.append(" tone="+alertFeature.getTone());
+        sb.append(" Notif,sound,app,vibrate,voice="+alertFeature.isNotificationEnabled()+alertFeature.isSoundEnabled()+alertFeature.isLaunchAppEnabled()
+            +alertFeature.isVibrationEnabled()+alertFeature.isVoiceInstructionStatusEnabled());
+        sb.append(" dayType="+alertSpecs.getDaySpecs().getDayType().ordinal());
+        sb.append(" dayOfWeek="+alertSpecs.getDaySpecs().getDayOfWeek().toString());
+        sb.append(" startDate="+alertSpecs.getDaySpecs().getStartDate().toString());
+        sb.append(" endDate="+alertSpecs.getDaySpecs().getEndDate());
+        sb.append(" everyNDays="+alertSpecs.getDaySpecs().getEveryNDays());
+        sb.append(" isRepeatWeekly"+alertSpecs.getDaySpecs().isRepeatWeekly());
+        sb.append(" hourType="+alertSpecs.getHourSpecs().getHourType().ordinal());
+        sb.append(" startTime"+alertSpecs.getHourSpecs().getStartTime().toString());
+        sb.append(" endTime="+alertSpecs.getHourSpecs().getEndTime().toString());
+        sb.append(" currentCounter="+alertSpecs.getHourSpecs().getCurrentCounter());
+        sb.append(" intervalInHour="+alertSpecs.getHourSpecs().getIntervalInHour());
+        //sb.append(" lastAlertTime"+alertSpecs.getHourSpecs().getLastAlertTime().toString());
+        sb.append(" numOfTimes"+alertSpecs.getHourSpecs().getNumOfTimes());
+        return sb.toString();
+    }
+
 //    public AlertModel(Parcel in){
 //        alertFeature = new AlertFeature();
 //        alertSpecs = new AlertSpecs();

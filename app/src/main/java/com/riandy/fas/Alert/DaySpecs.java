@@ -27,7 +27,7 @@ public class DaySpecs {
     public enum Frequency {EVERYDAY, WEEKDAY, WEEKEND, CUSTOM};
     
     private DayTypes type;
-    private LocalDate startDate,endDate;
+    private LocalDate startDate,endDate,lastAlertDate;
     private boolean dayOfWeek[];
     private boolean repeatWeekly;
     private int everyNDays;
@@ -35,6 +35,7 @@ public class DaySpecs {
     DaySpecs(){
         startDate = new LocalDate();
         endDate = new LocalDate();
+        lastAlertDate = new LocalDate();
         dayOfWeek = new boolean[7];
         type = DayTypes.DATEONLY;
     }
@@ -123,5 +124,13 @@ public class DaySpecs {
 
     public void setEveryNDays(int everyNDays) {
         this.everyNDays = everyNDays;
+    }
+
+    public LocalDate getLastAlertDate() {
+        return lastAlertDate;
+    }
+
+    public void setLastAlertDate(LocalDate lastAlertDate) {
+        this.lastAlertDate = lastAlertDate;
     }
 }

@@ -227,7 +227,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
 
         c.close();
         db.close();
-        return null;
+        return new ArrayList<>();
     }
 
     public int deleteAlert(long id) {

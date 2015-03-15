@@ -1,12 +1,17 @@
 package com.riandy.fas;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.riandy.fas.Alert.AlertDBHelper;
+import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
 
 import org.joda.time.format.DateTimeFormat;
@@ -36,10 +41,23 @@ public class AlertsArrayAdapter extends ArrayAdapter {
 
         TextView startTime = (TextView) rowView.findViewById(R.id.textView_alert_time);
         TextView name = (TextView) rowView.findViewById(R.id.textView_alert_name);
-        AlertModel data = list.get(position);
+        ToggleButton enabled = (ToggleButton) rowView.findViewById(R.id.toggleButton_enabled);
+
+        final AlertModel data = list.get(position);
         startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
         name.setText(data.getAlertFeature().getName());
-
+        enabled.setChecked(data.isEnabled());
+        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AlertManagerHelper.cancelAlert(context,data);
+                data.setEnabled(isChecked);
+                AlertDBHelper db = new AlertDBHelper(context);
+                db.updateAlert(data);
+                Log.d("alert",data.toString());
+                AlertManagerHelper.setAlerts(context);
+            }
+        });
         return rowView;
     }
 

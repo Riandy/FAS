@@ -90,7 +90,11 @@ public class MainActivity extends Activity {
                 break;
             case R.id.action_addAlert:
                     //launch new fragment to add alert
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,new AddAlert()).addToBackStack(null).
+                Fragment fragment = new AddAlert();
+//                Bundle data = new Bundle();
+//                data.putBoolean(AddAlert.TAG_IS_NEW_ALERT,true);
+//                fragment.setArguments(data);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).
                         commit();
                 break;
 

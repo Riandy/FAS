@@ -40,6 +40,9 @@ public class AlertManagerHelper extends BroadcastReceiver {
         List<AlertModel> alerts =  dbHelper.getAlerts();
         Calendar calendar = Calendar.getInstance();
 
+        if(alerts==null)
+            return;
+
         for (AlertModel alert : alerts) {
 
             if(alert.isEnabled()) {
@@ -57,7 +60,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 PendingIntent pIntent = createPendingIntent(context, alert);
                 setAlert(context,calendar,pIntent);
             }else{
-                Log.d("Alert", "alert not enabled");
+                Log.d("Alert "+alert.id, "alert not enabled");
             }
         }
 
@@ -126,9 +129,9 @@ public class AlertManagerHelper extends BroadcastReceiver {
             }
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.TIMERANGE){
             // TIME RANGE, INTERVAL --> need lastAlertTime
-            int interval = hourSpecs.getIntervalInHour();
-            today = hourSpecs.getLastAlertTime();
-            today.plusHours(interval);
+//            int interval = hourSpecs.getIntervalInHour();
+//            today = hourSpecs.getLastAlertTime();
+//            today.plusHours(interval);
         }
 
         return today;
@@ -144,11 +147,18 @@ public class AlertManagerHelper extends BroadcastReceiver {
             for (AlertModel alert : alerts) {
                 if (alert.isEnabled()) {
                     PendingIntent pIntent = createPendingIntent(context, alert);
-
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     alarmManager.cancel(pIntent);
                 }
             }
+        }
+    }
+
+    public static void cancelAlert(Context context,AlertModel alert){
+        if(alert.isEnabled()){
+            PendingIntent pIntent = createPendingIntent(context, alert);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pIntent);
         }
     }
 

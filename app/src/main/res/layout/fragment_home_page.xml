@@ -5,29 +5,37 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="TODAY"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="#FC464A" />
+        android:weightSum="1">
 
-    <TextClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textClock"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:format24Hour="dd MMMM yyyy" />
+        <TextView
+            android:layout_width="246dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="TODAY"
+            android:id="@+id/textView_dateToShow"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#FC464A"
+            android:layout_weight="0.91" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show All Alerts"
+            android:id="@+id/checkBox_showAllAlerts"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:layout_marginRight="10dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -35,7 +43,7 @@
         android:layout_height="20dp"
         android:background="#FEA456"
         android:id="@+id/linearLayout"
-        android:layout_below="@+id/textView"></LinearLayout>
+        android:layout_below="@+id/textView_dateToShow"></LinearLayout>
 
     <ListView
         android:layout_width="wrap_content"

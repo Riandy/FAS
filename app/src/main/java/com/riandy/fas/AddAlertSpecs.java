@@ -91,6 +91,12 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
             }
         });
 
+        if(unlimitedDateRange.isChecked())
+            (view.findViewById(R.id.layout_dateRange)).setVisibility(View.GONE);
+        else
+            (view.findViewById(R.id.layout_dateRange)).setVisibility(View.VISIBLE);
+
+
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
