@@ -12,6 +12,7 @@ public class AlertContract {
     public static abstract class Alert implements BaseColumns {
         public static final String TABLE_NAME = "alert";
 
+        public static final String COLUMN_NAME_SYNC_ID = "syncId";
         public static final String COLUMN_NAME_ALERT_NAME = "name";
         public static final String COLUMN_NAME_ALERT_ENABLED = "enabled";
         // columns for AlertModel Feature
@@ -35,6 +36,9 @@ public class AlertContract {
         public static final String COLUMN_NAME_ALERT_ENDTIME = "endTime";
         public static final String COLUMN_NAME_ALERT_INTERVAL_HOUR = "intervalHour";
         public static final String COLUMN_NAME_ALERT_NUM_OF_TIMES = "numOfTimes";
+        public static final String COLUMN_NAME_ALERT_EVERY_N_DAYS = "everyNDays";
+        public static final String COLUMN_NAME_ALERT_LAST_ALERT_TIME = "lastAlertTime";
+        public static final String COLUMN_NAME_ALERT_CURRENT_COUNTER = "currentCounter";
     }
 
 }

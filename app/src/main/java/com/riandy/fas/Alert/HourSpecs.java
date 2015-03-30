@@ -17,7 +17,9 @@ public class HourSpecs {
     public enum HourTypes {EXACTTIME, TIMERANGE, RANDOM};
 
     private HourTypes type;
-    private LocalTime startTime, endTime, lastAlertTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalTime lastAlertTime;
     private int intervalInHour;
     private int numOfTimes,currentCounter;
 
@@ -26,6 +28,7 @@ public class HourSpecs {
         startTime = new LocalTime();
         endTime = new LocalTime();
         type = HourTypes.EXACTTIME;
+        lastAlertTime = new LocalTime(0,0,0);
     }
 
     // Exact time = one timing
@@ -99,4 +102,9 @@ public class HourSpecs {
     public void setCurrentCounter(int currentCounter) {
         this.currentCounter = currentCounter;
     }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
 }

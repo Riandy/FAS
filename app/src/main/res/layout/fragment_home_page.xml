@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.riandy.fas.HomePage"
+    android:layout_height="match_parent" tools:context="com.riandy.fas.HomePageFragment"
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
@@ -23,7 +23,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:textColor="#FC464A"
+            android:textColor="@android:color/black"
             android:layout_weight="0.91" />
 
         <CheckBox
@@ -43,7 +43,21 @@
         android:layout_height="20dp"
         android:background="#FEA456"
         android:id="@+id/linearLayout"
-        android:layout_below="@+id/textView_dateToShow"></LinearLayout>
+        android:layout_below="@+id/textView_dateToShow">
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="You don&apos;t have any alerts scheduled for the day"
+        android:id="@+id/textView_noAlertsScheduled"
+        android:gravity="center"
+        android:paddingTop="50dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone" />
 
     <ListView
         android:layout_width="wrap_content"

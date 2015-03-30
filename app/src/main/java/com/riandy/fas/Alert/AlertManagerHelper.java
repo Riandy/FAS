@@ -57,6 +57,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
                     Log.d("Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
                     continue;
                 }
+                AlertDBHelper.getInstance(context).updateAlert(alert);
                 PendingIntent pIntent = createPendingIntent(context, alert);
                 setAlert(context,calendar,pIntent);
             }else{
@@ -76,13 +77,24 @@ public class AlertManagerHelper extends BroadcastReceiver {
         boolean[] dayOfWeek = daySpecs.getDayOfWeek();
 
         if(daySpecs.getDayType() == DaySpecs.DayTypes.UNLIMITED){ //unlimited event
-            int i, day = today.getDayOfWeek()-1;
-            for( i = 0; i < 6; i++ ){
-                if(dayOfWeek[(day+i)%7] == true)
-                    break;
+//            int i, day = today.getDayOfWeek()-1;
+//            for( i = 0; i < 6; i++ ){
+//                if(dayOfWeek[(day+i)%7] == true)
+//                    break;
+//            }
+//            today.plusDays(i);
+            //return today;
+
+            if(daySpecs.getEveryNDays()==0){
+                //look from dayOfWeek (1..7)
+                int day = today.getDayOfWeek();
+                for (int i = 0; i < 7 ; i++) {
+                    if(dayOfWeek[(day+i)%7] == true)
+                        return today.plusDays(i);
+                }
+            }else{
+                return today.plusDays(daySpecs.getEveryNDays());
             }
-            today.plusDays(i);
-            return today;
         } else if(daySpecs.getDayType() == DaySpecs.DayTypes.DATEONLY){ //one off event
             return startDate;
 
@@ -116,22 +128,40 @@ public class AlertManagerHelper extends BroadcastReceiver {
         if(hourSpecs.getHourType() == HourSpecs.HourTypes.EXACTTIME){
             today = startTime;
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.RANDOM){
-            // RANDOM, NUM OF TIMES --> need currentCounter
+            Log.d("AlertManagerHelper","Random");
             int currentCounter = hourSpecs.getCurrentCounter();
             int numOfTimes = hourSpecs.getNumOfTimes();
             if (numOfTimes > currentCounter){
-                if(today.isBefore(endTime)){
-                    Random r = new Random();
-                    int time = r.nextInt(endTime.getMillisOfDay()-today.getMillisOfDay());
-                    today.plusMillis(time);
-                    currentCounter++;
-                }
+                Random r = new Random();
+                if(hourSpecs.getLastAlertTime().isBefore(startTime))
+                    hourSpecs.setLastAlertTime(startTime);
+
+                int time = r.nextInt(endTime.getMillisOfDay()-hourSpecs.getLastAlertTime().getMillisOfDay());
+                today = hourSpecs.getLastAlertTime().plusMillis(time);
+                hourSpecs.setLastAlertTime(today);
+                hourSpecs.setCurrentCounter(++currentCounter);
+            }else{
+                Log.d("numOfTimes ","over");
             }
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.TIMERANGE){
-            // TIME RANGE, INTERVAL --> need lastAlertTime
-//            int interval = hourSpecs.getIntervalInHour();
-//            today = hourSpecs.getLastAlertTime();
-//            today.plusHours(interval);
+
+            Log.d("AlertManagerHelper","TimeRange");
+            LocalTime lastAlertTime = new LocalTime(hourSpecs.getLastAlertTime());
+            int intervalInMinutes = hourSpecs.getIntervalInHour() * 60;
+
+            if(today.isBefore(hourSpecs.getStartTime())){
+                today = hourSpecs.getStartTime();
+                hourSpecs.setLastAlertTime(today);
+            }
+            //outside range, equal endTime, last+interval>endTime
+            if( lastAlertTime.isBefore(hourSpecs.getStartTime()) || lastAlertTime.isAfter(hourSpecs.getEndTime()) ||
+                    lastAlertTime.isEqual(hourSpecs.getEndTime()) || lastAlertTime.plusMinutes(intervalInMinutes).isAfter(hourSpecs.getEndTime())){
+                hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
+                today = hourSpecs.getStartTime();
+            }else{
+                hourSpecs.setLastAlertTime(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes));
+                today = hourSpecs.getLastAlertTime();
+            }
         }
 
         return today;

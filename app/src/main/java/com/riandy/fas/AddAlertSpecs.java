@@ -194,7 +194,7 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString()!="")
+                if(!s.toString().equals(""))
                    callback.onAddSpecsData(DaySpecs.TAG_EVERYNDAYS, s.toString());
             }
         });
@@ -294,8 +294,8 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
         Log.d("specs","startTime "+specs.getHourSpecs().getStartTime().toString());
 
         unlimitedDateRange.setChecked(specs.getDaySpecs().getDayType() == DaySpecs.DayTypes.UNLIMITED);
-        startDate.setText(specs.getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
-        endDate.setText(specs.getDaySpecs().getEndDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
+        startDate.setText("Start date : " + specs.getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
+        endDate.setText("End date : " + specs.getDaySpecs().getEndDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
         startTime.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
         endTime.setText(specs.getHourSpecs().getEndTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
         startTimeOnce.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
@@ -306,11 +306,11 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
         }
 
         //TODO Fix this
-        //everyNDays.setText(specs.getDaySpecs().getEveryNDays());
+        everyNDays.setText(""+specs.getDaySpecs().getEveryNDays());
         if(specs.getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
-            numOfTimeOrHour.setText(specs.getHourSpecs().getIntervalInHour());
+            numOfTimeOrHour.setText(""+specs.getHourSpecs().getIntervalInHour());
         else if(specs.getHourSpecs().getHourType() == HourSpecs.HourTypes.RANDOM)
-            numOfTimeOrHour.setText(specs.getHourSpecs().getNumOfTimes());
+            numOfTimeOrHour.setText(""+specs.getHourSpecs().getNumOfTimes());
 
         if(specs.getHourSpecs().getHourType() == HourSpecs.HourTypes.EXACTTIME) {
             ((RadioButton) view.findViewById(R.id.radioButton_once)).setChecked(true);

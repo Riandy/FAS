@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton_continue"
-        android:text="Continue as Riandy"
+        android:text="Continue"
         android:layout_gravity="left|bottom"
         android:layout_marginTop="36dp"
         android:textColor="#1DB0ED"
@@ -44,22 +44,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not this user? Switch Account"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/imageButton_continue"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:textColor="#FFF" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="This application is still in alpha version. Please use it at your own risk. Created by Riandy(riandy@windowslive.com)"
         android:id="@+id/textView4"
-        android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:textColor="#FFF"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_below="@+id/imageButton_continue"
+        android:paddingTop="20dp" />
 
 </RelativeLayout>

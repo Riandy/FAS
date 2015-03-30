@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.riandy.fas.Alert.AlertContract.Alert;
+import com.riandy.fas.GoogleCalendarSync;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -20,11 +21,15 @@ import java.util.List;
  */
 public class AlertDBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 11;
+    private Context ctx;
+    GoogleCalendarSync gCal;
+
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "alertclock.db";
 
     private static final String SQL_CREATE_ALARM = "CREATE TABLE " + Alert.TABLE_NAME + " (" +
             Alert._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            Alert.COLUMN_NAME_SYNC_ID + " INTEGER,"+
             Alert.COLUMN_NAME_ALERT_NAME + " TEXT," +
             Alert.COLUMN_NAME_ALERT_ENABLED + " BOOLEAN," +
             Alert.COLUMN_NAME_ALERT_IS_VIBRATION_ENABLED + " BOOLEAN," +
@@ -41,11 +46,14 @@ public class AlertDBHelper extends SQLiteOpenHelper {
             Alert.COLUMN_NAME_ALERT_ENDDATE + " TEXT," +
             Alert.COLUMN_NAME_ALERT_DAYOFWEEK + " TEXT," +
             Alert.COLUMN_NAME_ALERT_REPEAT_WEEKLY + " BOOLEAN," +
+            Alert.COLUMN_NAME_ALERT_EVERY_N_DAYS + " INTEGER," +
             Alert.COLUMN_NAME_ALERT_HOUR_TYPES + " INTEGER," +
             Alert.COLUMN_NAME_ALERT_STARTTIME + " TEXT," +
             Alert.COLUMN_NAME_ALERT_ENDTIME + " TEXT," +
             Alert.COLUMN_NAME_ALERT_INTERVAL_HOUR + " TEXT," +
-            Alert.COLUMN_NAME_ALERT_NUM_OF_TIMES + " INTEGER " +
+            Alert.COLUMN_NAME_ALERT_NUM_OF_TIMES + " INTEGER, " +
+            Alert.COLUMN_NAME_ALERT_LAST_ALERT_TIME + " TEXT, "+
+            Alert.COLUMN_NAME_ALERT_CURRENT_COUNTER + " INTEGER "+
         " )";
 
     private static final String SQL_DELETE_ALARM =
@@ -55,6 +63,8 @@ public class AlertDBHelper extends SQLiteOpenHelper {
 
     public AlertDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        ctx = context;
+        gCal = new GoogleCalendarSync(ctx,1);
     }
 
     public static AlertDBHelper getInstance(Context ctx) {
@@ -100,6 +110,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         daySpecs.setDayFrequency(DaySpecs.Frequency.CUSTOM,dayFrequencyArr,0);
         // 1==x (just converting int to boolean). Replace it if you can find better and more elegant way.
         daySpecs.setRepeatWeekly((1==c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_REPEAT_WEEKLY))));
+        daySpecs.setEveryNDays(c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_EVERY_N_DAYS)));
 
         //HOUR SPECS
         hourSpecs.setHourType(HourSpecs.HourTypes.values()[c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_HOUR_TYPES))]);
@@ -109,7 +120,8 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         hourSpecs.setTimeRangeWithoutInterval(startTime, endTime);
         hourSpecs.setIntervalInHour(c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_INTERVAL_HOUR)));
         hourSpecs.setNumOfTimes(c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_NUM_OF_TIMES)));
-
+        hourSpecs.setLastAlertTime(LocalTime.parse(c.getString(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_LAST_ALERT_TIME))));
+        hourSpecs.setCurrentCounter(c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_ALERT_CURRENT_COUNTER)));
         AlertSpecs alertSpecs = new AlertSpecs(daySpecs ,hourSpecs);
 
         //ALERT FEATURE
@@ -129,7 +141,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
 
         AlertModel model = new AlertModel(alertFeature,alertSpecs,isEnabled);
         model.id = c.getInt(c.getColumnIndex(Alert._ID));
-
+        model.syncId = c.getInt(c.getColumnIndex(Alert.COLUMN_NAME_SYNC_ID));
         return model;
     }
 
@@ -156,6 +168,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
     private ContentValues populateContent(AlertModel model){
         ContentValues values = new ContentValues();
 
+        values.put(Alert.COLUMN_NAME_SYNC_ID,model.syncId);
         values.put(Alert.COLUMN_NAME_ALERT_NAME,model.getAlertFeature().getName());
         values.put(Alert.COLUMN_NAME_ALERT_ENABLED,model.isEnabled());
         values.put(Alert.COLUMN_NAME_ALERT_IS_VIBRATION_ENABLED,model.getAlertFeature().isVibrationEnabled());
@@ -172,22 +185,29 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         values.put(Alert.COLUMN_NAME_ALERT_ENDDATE,model.getAlertSpecs().getDaySpecs().getEndDate().toString());
         values.put(Alert.COLUMN_NAME_ALERT_DAYOFWEEK,convertBooleanArrayToString(model.getAlertSpecs().getDaySpecs().getDayOfWeek()));
         values.put(Alert.COLUMN_NAME_ALERT_REPEAT_WEEKLY,model.getAlertSpecs().getDaySpecs().isRepeatWeekly());
+        values.put(Alert.COLUMN_NAME_ALERT_EVERY_N_DAYS,model.getAlertSpecs().getDaySpecs().getEveryNDays());
         values.put(Alert.COLUMN_NAME_ALERT_HOUR_TYPES,model.getAlertSpecs().getHourSpecs().getHourType().ordinal());
         values.put(Alert.COLUMN_NAME_ALERT_STARTTIME,model.getAlertSpecs().getHourSpecs().getStartTime().toString());
         values.put(Alert.COLUMN_NAME_ALERT_ENDTIME,model.getAlertSpecs().getHourSpecs().getEndTime().toString());
         values.put(Alert.COLUMN_NAME_ALERT_INTERVAL_HOUR,model.getAlertSpecs().getHourSpecs().getIntervalInHour());
         values.put(Alert.COLUMN_NAME_ALERT_NUM_OF_TIMES,model.getAlertSpecs().getHourSpecs().getNumOfTimes());
+        values.put(Alert.COLUMN_NAME_ALERT_LAST_ALERT_TIME,model.getAlertSpecs().getHourSpecs().getLastAlertTime().toString());
+        values.put(Alert.COLUMN_NAME_ALERT_CURRENT_COUNTER,model.getAlertSpecs().getHourSpecs().getCurrentCounter());
 
         return values;
     }
 
     public long createAlert(AlertModel model){
+        gCal.addAlert(model);
         ContentValues values = populateContent(model);
+        Log.d("AlertDBHelper",model.toString());
         return getWritableDatabase().insert(Alert.TABLE_NAME,null,values);
     }
 
     public long updateAlert(AlertModel model){
+        gCal.updateAlert(model);
         ContentValues values = populateContent(model);
+        Log.d("updating alert ",model.toString());
         return getWritableDatabase().update(Alert.TABLE_NAME, values, Alert._ID + " = ?", new String[] { String.valueOf(model.id)});
     }
 
@@ -231,6 +251,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
     }
 
     public int deleteAlert(long id) {
+        gCal.deleteAlert(getAlert(id).syncId);
         return getWritableDatabase().delete(Alert.TABLE_NAME, Alert._ID + " = ?", new String[] { String.valueOf(id) });
     }
 

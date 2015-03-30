@@ -27,7 +27,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.List;
 
 
-public class HomePage extends Fragment {
+public class HomePageFragment extends Fragment {
 
     ListView listView;
     TextView dateToShow;
@@ -37,7 +37,7 @@ public class HomePage extends Fragment {
     LocalDate selectedDate;
     AlertsArrayAdapter adapter;
 
-    public HomePage() {
+    public HomePageFragment() {
         // Required empty public constructor
     }
 
@@ -70,6 +70,7 @@ public class HomePage extends Fragment {
                         (Context.LAYOUT_INFLATER_SERVICE);
                 LinearLayout ll= (LinearLayout)inflater.inflate(R.layout.calendar_view, null, false);
                 CalendarView cv = (CalendarView) ll.getChildAt(0);
+                selectedDate = new LocalDate();
                 cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
                     @Override
@@ -80,7 +81,6 @@ public class HomePage extends Fragment {
                 });
                 new AlertDialog.Builder(view.getContext())
                         .setTitle("Event Calendar")
-                        .setMessage("Click to schedule or view events.")
                         .setView(ll)
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -153,6 +153,13 @@ public class HomePage extends Fragment {
                 alertList.add(model);
 
             }
+        }
+        TextView message = (TextView) view.findViewById(R.id.textView_noAlertsScheduled);
+
+        if(alertList.isEmpty()){
+            message.setVisibility(View.VISIBLE);
+        }else{
+            message.setVisibility(View.GONE);
         }
         listView.setAdapter(adapter);
     }

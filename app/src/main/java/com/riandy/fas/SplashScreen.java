@@ -29,7 +29,7 @@ public class SplashScreen extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().getActionBar().show();
-                Fragment fragment = new HomePage();
+                Fragment fragment = new HomePageFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
 
             }

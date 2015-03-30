@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -96,7 +97,7 @@ public class AlertFeature {
 
     public void launchVibration(){
         //TODO : make the pattern customizable and also repeat or no repeat
-        long[] vibratePattern = {200,500};
+        long[] vibratePattern = {200,500,800,1000,1000};
         vibrator.vibrate(vibratePattern, 0);
     }
 
@@ -144,16 +145,18 @@ public class AlertFeature {
     }
 
     public void launchApp(){
+        Log.d("app","launching app");
         Intent i;
         PackageManager manager = context.getPackageManager();
+        PInfo pInfo = new PInfo(context);
         try {
-            i = manager.getLaunchIntentForPackage(appToLaunch);
+            i = manager.getLaunchIntentForPackage(pInfo.getPackageName(appToLaunch));
             if (i == null)
                 throw new PackageManager.NameNotFoundException();
             i.addCategory(Intent.CATEGORY_LAUNCHER);
             context.startActivity(i);
         } catch (PackageManager.NameNotFoundException ignored) {
-
+            Log.d("launchApp","cannot found app");
         }
     }
 

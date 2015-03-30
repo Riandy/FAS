@@ -132,7 +132,7 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setName(alertName.getText().toString());
                 alert.getAlertFeature().setDescription(alertDescription.getText().toString());
                 AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
-
+                Log.d("AddAlert alert",alert.toString());
                 if(isNewAlert){
                     //save it. create new alert
                     long id = db.createAlert(alert);
@@ -196,6 +196,8 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertSpecs().getHourSpecs().setExactTime(time);
                 break;
             case HourSpecs.TAG_ENDTIME:
+                time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE));
+                alert.getAlertSpecs().getHourSpecs().setEndTime(time);
                 break;
             case DaySpecs.TAG_DAYOFWEEK:
                 alert.getAlertSpecs().getDaySpecs().setDayOfWeek((boolean[])data);
@@ -206,18 +208,19 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 break;
             case DaySpecs.TAG_EVERYNDAYS:
                 //TODO fix this
-//                if(!((data).equals("")))
-//                   alert.getAlertSpecs().getDaySpecs().setEveryNDays(Integer.parseInt((String)data));
+                alert.getAlertSpecs().getDaySpecs().setEveryNDays(Integer.parseInt((String)data));
                 break;
             case HourSpecs.TAG_HOURTYPE:
                 alert.getAlertSpecs().getHourSpecs().setHourType(HourSpecs.HourTypes.values()[(int)data]);
                 break;
             case HourSpecs.TAG_INTERVAL_OR_NUMOFTIMES:
                 //TODO fix this
-//                if(alert.getAlertSpecs().getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
-//                    alert.getAlertSpecs().getHourSpecs().setIntervalInHour(Integer.parseInt((String)data));
-//                else
-//                    alert.getAlertSpecs().getHourSpecs().setNumOfTimes(Integer.parseInt((String)data));
+                if(!data.equals("")) {
+                    if (alert.getAlertSpecs().getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
+                        alert.getAlertSpecs().getHourSpecs().setIntervalInHour(Integer.parseInt((String) data));
+                    else
+                        alert.getAlertSpecs().getHourSpecs().setNumOfTimes(Integer.parseInt((String) data));
+                }
             default:
                 Log.d("Not done",tag);
                 break;

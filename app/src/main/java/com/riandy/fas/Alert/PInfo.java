@@ -69,7 +69,17 @@ public class PInfo {
 
 		return res; 
 	}
-	
+
+    public String getPackageName(String name){
+
+        ArrayList<PInfo> list = getInstalledApps();
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).appname.equals(name))
+                return list.get(i).pname;
+        }
+        return "";
+    }
+
 	public String getAppname() {
 		return appname;
 	}

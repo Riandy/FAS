@@ -13,6 +13,7 @@ import android.widget.ToggleButton;
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.HourSpecs;
 
 import org.joda.time.format.DateTimeFormat;
 
@@ -44,7 +45,11 @@ public class AlertsArrayAdapter extends ArrayAdapter {
         ToggleButton enabled = (ToggleButton) rowView.findViewById(R.id.toggleButton_enabled);
 
         final AlertModel data = list.get(position);
-        startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+        //Log.d("alertsArrayAdapter alert ",data.toString());
+        if(data.getAlertSpecs().getHourSpecs().getHourType()== HourSpecs.HourTypes.EXACTTIME)
+            startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+        else
+            startTime.setText(data.getAlertSpecs().getHourSpecs().getLastAlertTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
         name.setText(data.getAlertFeature().getName());
         enabled.setChecked(data.isEnabled());
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -19,6 +19,7 @@ public class AlertModel implements Parcelable{
 
     private boolean isEnabled;
     public long id;
+    public long syncId; //used for googleCal
 
     public AlertModel() {
         alertFeature = new AlertFeature();
@@ -66,7 +67,7 @@ public class AlertModel implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(isEnabled ? 1 : 0);
         dest.writeLong(id);
-
+        dest.writeLong(syncId);
         //AlertSpecs
         //daySpecs
         dest.writeInt(alertSpecs.getDaySpecs().getDayType().ordinal());
@@ -104,6 +105,7 @@ public class AlertModel implements Parcelable{
         StringBuilder sb = new StringBuilder();
 
         sb.append("id="+id);
+        sb.append(" syncId="+syncId);
         sb.append(" name="+alertFeature.getName());
         sb.append(" desc="+alertFeature.getDescription());
         sb.append(" appToLaunch="+alertFeature.getAppToLaunch());
@@ -121,7 +123,7 @@ public class AlertModel implements Parcelable{
         sb.append(" endTime="+alertSpecs.getHourSpecs().getEndTime().toString());
         sb.append(" currentCounter="+alertSpecs.getHourSpecs().getCurrentCounter());
         sb.append(" intervalInHour="+alertSpecs.getHourSpecs().getIntervalInHour());
-        //sb.append(" lastAlertTime"+alertSpecs.getHourSpecs().getLastAlertTime().toString());
+        sb.append(" lastAlertTime"+alertSpecs.getHourSpecs().getLastAlertTime().toString());
         sb.append(" numOfTimes"+alertSpecs.getHourSpecs().getNumOfTimes());
         return sb.toString();
     }

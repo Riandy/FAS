@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.riandy.fas.Alert.AlertScreenFragment"
+    android:layout_height="match_parent" tools:context="com.riandy.fas.AlertScreenFragment"
     android:orientation="vertical"
     android:paddingTop="100dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:background="#FEA456">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -16,7 +17,8 @@
         android:text="Alert Name"
         android:id="@+id/textView_alertName"
         android:textSize="30dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="#FFF" />
 
     <TextView
         android:layout_width="match_parent"
@@ -26,5 +28,14 @@
         android:id="@+id/textView_alertDescription"
         android:textSize="30dp"
         android:gravity="center"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:textColor="#FFF" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Launch App"
+        android:id="@+id/button_launchApp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp" />
 </LinearLayout>
