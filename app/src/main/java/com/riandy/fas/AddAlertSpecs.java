@@ -258,6 +258,12 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        setTargetFragment(null, -1);
+    }
+
     public void initialization(){
         unlimitedDateRange = (Switch) view.findViewById(R.id.switch_unlimited_date_range);
         startDate = (TextView) view.findViewById(R.id.textView_startDate);
@@ -296,9 +302,9 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
         unlimitedDateRange.setChecked(specs.getDaySpecs().getDayType() == DaySpecs.DayTypes.UNLIMITED);
         startDate.setText("Start date : " + specs.getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
         endDate.setText("End date : " + specs.getDaySpecs().getEndDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
-        startTime.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
-        endTime.setText(specs.getHourSpecs().getEndTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
-        startTimeOnce.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+        startTime.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
+        endTime.setText(specs.getHourSpecs().getEndTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
+        startTimeOnce.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
 
         boolean[] arr = specs.getDaySpecs().getDayOfWeek();
         for(int i=0;i<7;i++){

@@ -27,6 +27,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
     public static final String TIME_HOUR = "timeHour";
     public static final String TIME_MINUTE = "timeMinute";
     public static final String TONE = "alarmTone";
+    static boolean counterReset = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,6 +35,8 @@ public class AlertManagerHelper extends BroadcastReceiver {
     }
 
     public static void setAlerts(Context context) {
+        Log.d("riandy","setting all alerts");
+
         cancelAlerts(context);
 
         AlertDBHelper dbHelper = AlertDBHelper.getInstance(context);
@@ -47,14 +50,18 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
             if(alert.isEnabled()) {
                 //Log.d("Alert", "alert enabled");
-                LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs());
+                counterReset = false;
                 LocalTime localTime = getValidTime(alert.getAlertSpecs().getHourSpecs());
-                if(localDate == null || localTime == null)
+                LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
+
+                if(localDate == null || localTime == null) {
+                    Log.d("riandy " , " alarm expired "+localDate + " " +localTime);
                     continue;
+                }
                 calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
                         localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
                 if(calendar.before(Calendar.getInstance())) { // date has passed. just continue;
-                    Log.d("Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
+                    Log.d("riandy Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
                     continue;
                 }
                 AlertDBHelper.getInstance(context).updateAlert(alert);
@@ -67,47 +74,50 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
     }
 
-    private static LocalDate getValidDate(DaySpecs daySpecs){
+    private static LocalDate getValidDate(DaySpecs daySpecs, HourSpecs hourSpecs){
         //check if its between today is between the startDate and endDate
         LocalDate startDate,endDate,today;
         today = new LocalDate();
         startDate = daySpecs.getStartDate();
         endDate = daySpecs.getEndDate();
 
+        LocalTime lastAlertTime = hourSpecs.getStartTime();
+        boolean startTimeIsAfterNow = lastAlertTime.isAfter(new LocalTime());
+        boolean nowIsBeforeEndTime = new LocalTime().isBefore(hourSpecs.getEndTime());
+        Log.d("riandy nowIsBeforeEndTime",""+nowIsBeforeEndTime);
         boolean[] dayOfWeek = daySpecs.getDayOfWeek();
 
         if(daySpecs.getDayType() == DaySpecs.DayTypes.UNLIMITED){ //unlimited event
-//            int i, day = today.getDayOfWeek()-1;
-//            for( i = 0; i < 6; i++ ){
-//                if(dayOfWeek[(day+i)%7] == true)
-//                    break;
-//            }
-//            today.plusDays(i);
-            //return today;
-
+            Log.d("riandy","alert type = unlimited "+startTimeIsAfterNow);
             if(daySpecs.getEveryNDays()==0){
                 //look from dayOfWeek (1..7)
                 int day = today.getDayOfWeek();
                 for (int i = 0; i < 7 ; i++) {
-                    if(dayOfWeek[(day+i)%7] == true)
+                    if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime))
                         return today.plusDays(i);
+                    else
+                        startTimeIsAfterNow = true;
                 }
             }else{
                 return today.plusDays(daySpecs.getEveryNDays());
             }
-        } else if(daySpecs.getDayType() == DaySpecs.DayTypes.DATEONLY){ //one off event
+        } else if(daySpecs.getDayType() == DaySpecs.DayTypes.DATEONLY || daySpecs.getStartDate().isEqual(daySpecs.getEndDate())){ //one off event && exact date
             return startDate;
 
         } else if((today.isAfter(startDate) || today.isEqual(startDate)) &&
                 (today.isBefore(endDate) || today.isEqual(endDate))){ //within range of startDate and endDate
             //find the nearest available date
-            int i, day = today.getDayOfWeek()-1;
-            for( i = 0; i < 6; i++ ){
-                if(dayOfWeek[(day+i)%7] == true)
+            Log.d("riandy ","within startDate and endDate");
+            int i, day = today.getDayOfWeek();
+            for( i = 0; i < 7; i++ ){
+                if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime) && !counterReset)
                     break;
+                else {
+                    startTimeIsAfterNow = true;
+                    counterReset = false;
+                }
             }
-
-            today.plusDays(i);
+            today = today.plusDays(i);
             //check if its within date range
             if((today.isAfter(startDate) || today.isEqual(startDate)) &&
                     (today.isBefore(endDate) || today.isEqual(endDate))) {
@@ -131,40 +141,79 @@ public class AlertManagerHelper extends BroadcastReceiver {
             Log.d("AlertManagerHelper","Random");
             int currentCounter = hourSpecs.getCurrentCounter();
             int numOfTimes = hourSpecs.getNumOfTimes();
-            if (numOfTimes > currentCounter){
+            if (numOfTimes >  currentCounter){
                 Random r = new Random();
-                if(hourSpecs.getLastAlertTime().isBefore(startTime))
-                    hourSpecs.setLastAlertTime(startTime);
+                if(hourSpecs.getLastAlertTime().isBefore(startTime)){
+                    if(startTime.isAfter(today)){
+                        //lastAlertTime is start time
+                        hourSpecs.setLastAlertTime(startTime);
+                    }else{
+                        //lastAlertTime is today
+                        hourSpecs.setLastAlertTime(today);
+                    }
+                }
 
+                Log.d("riandy ",hourSpecs.getLastAlertTime().toString());
                 int time = r.nextInt(endTime.getMillisOfDay()-hourSpecs.getLastAlertTime().getMillisOfDay());
                 today = hourSpecs.getLastAlertTime().plusMillis(time);
                 hourSpecs.setLastAlertTime(today);
                 hourSpecs.setCurrentCounter(++currentCounter);
             }else{
-                Log.d("numOfTimes ","over");
+                Log.d("riandy numOfTimes ","over");
+                //reset startTime and counter
+                hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
+                hourSpecs.setCurrentCounter(1);
+                Random r = new Random();
+                int time = r.nextInt(endTime.getMillisOfDay()-hourSpecs.getStartTime().getMillisOfDay());
+                today = hourSpecs.getLastAlertTime().plusMillis(time);
+                counterReset = true;
             }
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.TIMERANGE){
 
-            Log.d("AlertManagerHelper","TimeRange");
             LocalTime lastAlertTime = new LocalTime(hourSpecs.getLastAlertTime());
             int intervalInMinutes = hourSpecs.getIntervalInHour() * 60;
+            Log.d("riandy lastAlertTime",hourSpecs.getLastAlertTime().toString()+" interval = " +intervalInMinutes);
 
+            //today time is before start time
             if(today.isBefore(hourSpecs.getStartTime())){
+                Log.d("riandy ","is before start time");
                 today = hourSpecs.getStartTime();
                 hourSpecs.setLastAlertTime(today);
-            }
-            //outside range, equal endTime, last+interval>endTime
-            if( lastAlertTime.isBefore(hourSpecs.getStartTime()) || lastAlertTime.isAfter(hourSpecs.getEndTime()) ||
-                    lastAlertTime.isEqual(hourSpecs.getEndTime()) || lastAlertTime.plusMinutes(intervalInMinutes).isAfter(hourSpecs.getEndTime())){
-                hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
-                today = hourSpecs.getStartTime();
-            }else{
+            }else if( (lastAlertTime.isAfter(hourSpecs.getStartTime()) || lastAlertTime.isEqual(hourSpecs.getStartTime()))
+                    && lastAlertTime.isBefore(hourSpecs.getEndTime())){
+                //last alert time between start time and end time
+                Log.d("riandy ","is between start time and end time");
                 hourSpecs.setLastAlertTime(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes));
+                today = hourSpecs.getLastAlertTime();
+                Log.d("riandy today",today.toString());
+            }else if( lastAlertTime.isBefore(endTime) && today.isAfter(startTime)){
+                Log.d("riandy ","alert set after start time");
+                int minutesDiff = ( endTime.getMillisOfDay() - startTime.getMillisOfDay() ) / 1000 / 60 ;
+                Log.d("riandy ","minutesDiff "+ minutesDiff/60 );
+                LocalTime temp = new LocalTime(startTime);
+                for(int i = 0; i <= minutesDiff; i+=intervalInMinutes){
+                    temp = temp.plusMinutes(minutesDiff);
+                    Log.d("riandy ","i="+i+" "+temp.toString());
+                    if(temp.isAfter(today)) {
+                        hourSpecs.setLastAlertTime(temp);
+                        today = hourSpecs.getLastAlertTime();
+                        Log.d("riandy ","time set = "+ today.toString());
+                        break;
+                    }
+                }
+            }else{
+                //reset the lastAlertTime into startTime
+                Log.d("riandy ","else case "+lastAlertTime.isAfter(hourSpecs.getStartTime())+" "+lastAlertTime.isEqual(hourSpecs.getStartTime())+" "
+                + lastAlertTime.isBefore(hourSpecs.getEndTime()));
+                hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
                 today = hourSpecs.getLastAlertTime();
             }
         }
 
-        return today;
+        if(today.isBefore(hourSpecs.getEndTime())||today.isEqual(hourSpecs.getEndTime()))
+            return today;
+        else
+            return null;
     }
 
     public static void cancelAlerts(Context context) {
@@ -217,7 +266,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
         }
-        Log.d("You set alarm ",calendar.getTime().toString());
+        Log.d("riandy You set alarm ",calendar.getTime().toString());
     }
 }
 

@@ -122,7 +122,7 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
 
     @Override
     public void onAddTimeSubmit(int hourOfDay, int minute, String tag) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss aaa");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aaa");
         time.set(0,0,0,hourOfDay,minute);
         startTime.setText(dateFormat.format(time.getTime()));
         Log.d("Change Time to",time.getTime().toString());
@@ -135,7 +135,7 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
         AlertSpecs alertSpecs = data.getParcelable(AlertSpecs.TAG_ALERT_SPECS);
 
         startDate.setText(alertSpecs.getDaySpecs().getStartDate().toString(DateTimeFormat.forPattern("EEE, d MMM yyyy")));
-        startTime.setText(alertSpecs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+        startTime.setText(alertSpecs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
 
     }
 }

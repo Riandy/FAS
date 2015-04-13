@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
 
+import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertModel;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Riandy on 23/3/15.
@@ -66,6 +68,21 @@ public class GoogleCalendarSync {
         deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
         int rows = context.getContentResolver().delete(deleteUri, null, null);
         return rows==1;
+    }
+
+    public void deleteAllAlerts(){
+        List<AlertModel> list =  AlertDBHelper.getInstance(context).getAlerts();
+        for(AlertModel model:list){
+            deleteAlert(model.syncId);
+        }
+    }
+
+    public void addAllAlerts(){
+        List<AlertModel> list =  AlertDBHelper.getInstance(context).getAlerts();
+        for(AlertModel model:list){
+            addAlert(model);
+            AlertDBHelper.getInstance(context).updateAlert(model);
+        }
     }
 
     public boolean updateAlert(AlertModel model){

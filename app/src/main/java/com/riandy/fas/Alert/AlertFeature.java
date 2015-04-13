@@ -98,7 +98,7 @@ public class AlertFeature {
     public void launchVibration(){
         //TODO : make the pattern customizable and also repeat or no repeat
         long[] vibratePattern = {200,500,800,1000,1000};
-        vibrator.vibrate(vibratePattern, 0);
+        vibrator.vibrate(vibratePattern, 3);
     }
 
     public void launchVoiceInstruction(){

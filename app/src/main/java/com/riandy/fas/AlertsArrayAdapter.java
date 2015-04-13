@@ -47,9 +47,9 @@ public class AlertsArrayAdapter extends ArrayAdapter {
         final AlertModel data = list.get(position);
         //Log.d("alertsArrayAdapter alert ",data.toString());
         if(data.getAlertSpecs().getHourSpecs().getHourType()== HourSpecs.HourTypes.EXACTTIME)
-            startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+            startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
         else
-            startTime.setText(data.getAlertSpecs().getHourSpecs().getLastAlertTime().toString(DateTimeFormat.forPattern("hh:mm:ss aaa")));
+            startTime.setText(data.getAlertSpecs().getHourSpecs().getLastAlertTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
         name.setText(data.getAlertFeature().getName());
         enabled.setChecked(data.isEnabled());
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

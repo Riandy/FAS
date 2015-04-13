@@ -1,9 +1,70 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.riandy.fas.SettingsFragment">
+    android:layout_height="match_parent" tools:context="com.riandy.fas.SettingsFragment"
+    android:padding="10dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sync Alerts"
+        android:id="@+id/textView"
+        android:layout_gravity="left|top"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync with Google Calendar"
+        android:id="@+id/switch_syncGoogleCal"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:checked="false"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Import Alerts"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/switch_syncGoogleCal"
+        android:layout_alignLeft="@+id/switch_syncGoogleCal"
+        android:layout_alignStart="@+id/switch_syncGoogleCal"
+        android:paddingBottom="10dp"
+        android:paddingTop="30dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse"
+        android:id="@+id/button_browseXML"
+        android:layout_below="@+id/textView3"
+        android:layout_alignRight="@+id/switch_syncGoogleCal"
+        android:layout_alignEnd="@+id/switch_syncGoogleCal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Import from XML file"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView13"
+        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_alignBottom="@+id/button_browseXML"
+        android:layout_toLeftOf="@+id/button_browseXML"
+        android:layout_toStartOf="@+id/button_browseXML"
+        android:layout_gravity="center"
+        android:gravity="center_vertical" />
+
+</RelativeLayout>

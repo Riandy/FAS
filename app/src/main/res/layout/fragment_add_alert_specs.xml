@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:text="Every X hours"
                 android:id="@+id/radioButton_everyXHours"
-                android:checked="false"
+                android:checked="true"
                 android:layout_weight="0.5" />
 
             <RadioButton

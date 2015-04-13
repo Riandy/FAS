@@ -145,7 +145,7 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         return model;
     }
 
-    private boolean[] convertStringToBooleanArray(String arr){
+    public static boolean[] convertStringToBooleanArray(String arr){
         String[] repeatingDays = arr.split(",");
         boolean[] result = new boolean[repeatingDays.length];
 

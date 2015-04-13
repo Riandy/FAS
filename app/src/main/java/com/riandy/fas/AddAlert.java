@@ -186,10 +186,11 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         switch (tag){
             case DaySpecs.TAG_STARTDATE:
                 LocalDate date = new LocalDate(((Calendar)data).get(Calendar.YEAR),((Calendar)data).get(Calendar.MONTH)+1,((Calendar)data).get(Calendar.DAY_OF_MONTH));
-                alert.getAlertSpecs().getDaySpecs().setDate(date);
-                Log.d("Stored",alert.getAlertSpecs().getDaySpecs().getStartDate().toString());
+                alert.getAlertSpecs().getDaySpecs().setStartDate(date);
                 break;
             case DaySpecs.TAG_ENDDATE:
+                date = new LocalDate(((Calendar)data).get(Calendar.YEAR),((Calendar)data).get(Calendar.MONTH)+1,((Calendar)data).get(Calendar.DAY_OF_MONTH));
+                alert.getAlertSpecs().getDaySpecs().setEndDate(date);
                 break;
             case HourSpecs.TAG_STARTTIME:
                 LocalTime time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE));

@@ -29,7 +29,7 @@ public class AlertService extends Service {
             Log.d("READING", "" + intent.getExtras().getInt("id"));
         }
         getApplication().startActivity(alarmIntent);
-
+        Log.d("riandy","setting alert");
         AlertManagerHelper.setAlerts(this);
 
         return super.onStartCommand(intent, flags, startId);

@@ -37,6 +37,9 @@ public class DaySpecs {
         endDate = new LocalDate();
         lastAlertDate = new LocalDate();
         dayOfWeek = new boolean[7];
+        for(int i=0;i<7;i++){
+            dayOfWeek[i]=true;
+        }
         type = DayTypes.DATEONLY;
     }
 
@@ -132,5 +135,13 @@ public class DaySpecs {
 
     public void setLastAlertDate(LocalDate lastAlertDate) {
         this.lastAlertDate = lastAlertDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }

@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
-import com.riandy.fas.Alert.DaySpecs;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -148,10 +148,11 @@ public class HomePageFragment extends Fragment {
         if(alertList!=null)
             alertList.clear();
         for(AlertModel model:tempList){
-            if(date==null||model.getAlertSpecs().getDaySpecs().getDayType()== DaySpecs.DayTypes.UNLIMITED||
-                    model.getAlertSpecs().getDaySpecs().getStartDate().equals(date)){
+            if(date==null //show everything
+                || model.getAlertSpecs().getDaySpecs().getStartDate().equals(date) // exact date alert
+                || isBetweenDate(date,model) // between startDate and endDate
+              ){
                 alertList.add(model);
-
             }
         }
         TextView message = (TextView) view.findViewById(R.id.textView_noAlertsScheduled);
@@ -163,4 +164,30 @@ public class HomePageFragment extends Fragment {
         }
         listView.setAdapter(adapter);
     }
+
+    public boolean isBetweenDate(LocalDate date, AlertModel model){
+        boolean result;
+
+        if( (date.isAfter(model.getAlertSpecs().getDaySpecs().getStartDate()) || // between startDate and endDate
+                date.isEqual(model.getAlertSpecs().getDaySpecs().getStartDate())) &&
+                (date.isBefore(model.getAlertSpecs().getDaySpecs().getEndDate()) ||
+                date.isEqual(model.getAlertSpecs().getDaySpecs().getEndDate()))){
+
+            if(model.getAlertSpecs().getDaySpecs().getEveryNDays()==0){
+                boolean[] dayOfWeek = model.getAlertSpecs().getDaySpecs().getDayOfWeek();
+                result = dayOfWeek[date.getDayOfWeek()-1];
+            }else{
+                //check from everyNDays
+                Log.d("riandy ","isbetweenDate2 = "+date.getDayOfYear()+" "+model.getAlertSpecs().getDaySpecs().getStartDate().getDayOfYear()+" " +model.getAlertSpecs().getDaySpecs().getEveryNDays());
+
+                result = ( (date.getDayOfYear() - model.getAlertSpecs().getDaySpecs().getStartDate().getDayOfYear()) % model.getAlertSpecs().getDaySpecs().getEveryNDays() == 0);
+            }
+        }else{
+            Log.d("riandy ","isbetweenDate1 = ");
+            result = false;
+        }
+        Log.d("riandy ","isbetweenDate = "+result);
+        return result;
+    }
+
 }

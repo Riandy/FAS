@@ -20,7 +20,7 @@
         <Switch
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vibrate"
+            android:text="Vibration"
             android:id="@+id/switch_vibrate"
             android:checked="true"
             android:enabled="true"
