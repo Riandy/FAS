@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
@@ -132,18 +133,25 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setName(alertName.getText().toString());
                 alert.getAlertFeature().setDescription(alertDescription.getText().toString());
                 AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
-                Log.d("AddAlert alert",alert.toString());
-                if(isNewAlert){
-                    //save it. create new alert
-                    long id = db.createAlert(alert);
-                    Log.d("new alert",""+id+" created");
-                }else{
-                    //save only the changes.
-                    long id = db.updateAlert(alert);
-                    Log.d("update alert",""+id+" updated");
+                //Log.d("AddAlert alert",alert.toString());
+
+                if(alert.getAlertSpecs().getDaySpecs().getStartDate().isAfter(alert.getAlertSpecs().getDaySpecs().getEndDate())){
+                    Toast.makeText(view.getContext(),"start date cannot be later than end date",Toast.LENGTH_SHORT).show();
+                }else if(alert.getAlertSpecs().getHourSpecs().getStartTime().isAfter(alert.getAlertSpecs().getHourSpecs().getEndTime())){
+                    Toast.makeText(view.getContext(),"start time cannot be later than end time",Toast.LENGTH_SHORT).show();
+                }else {
+                    if (isNewAlert) {
+                        //save it. create new alert
+                        long id = db.createAlert(alert);
+                        Log.d("new alert", "" + id + " created");
+                    } else {
+                        //save only the changes.
+                        long id = db.updateAlert(alert);
+                        Log.d("update alert", "" + id + " updated");
+                    }
+                    AlertManagerHelper.setAlerts(view.getContext());
+                    getFragmentManager().popBackStack();
                 }
-                AlertManagerHelper.setAlerts(view.getContext());
-                getFragmentManager().popBackStack();
             }
         });
 
@@ -193,15 +201,15 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertSpecs().getDaySpecs().setEndDate(date);
                 break;
             case HourSpecs.TAG_STARTTIME:
-                LocalTime time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE));
+                LocalTime time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE),0);
                 alert.getAlertSpecs().getHourSpecs().setExactTime(time);
                 break;
             case HourSpecs.TAG_ENDTIME:
-                time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE));
+                time  = new LocalTime(((Calendar)data).get(Calendar.HOUR_OF_DAY),((Calendar)data).get(Calendar.MINUTE),0);
                 alert.getAlertSpecs().getHourSpecs().setEndTime(time);
                 break;
             case DaySpecs.TAG_DAYOFWEEK:
-                alert.getAlertSpecs().getDaySpecs().setDayOfWeek((boolean[])data);
+                alert.getAlertSpecs().getDaySpecs().setDayOfWeek((boolean[]) data);
                 break;
             case DaySpecs.TAG_DAYTYPE:
                 Log.d("day type","HELLO "+data.toString());

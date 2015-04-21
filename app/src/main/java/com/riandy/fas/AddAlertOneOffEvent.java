@@ -117,7 +117,9 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
         date.set(year,month,day);
         startDate.setText(dateFormat.format(date.getTime()));
-        callback.onAddSpecsData(DaySpecs.TAG_STARTDATE,date);
+        callback.onAddSpecsData(DaySpecs.TAG_STARTDATE, date);
+        callback.onAddSpecsData(DaySpecs.TAG_ENDDATE,date);
+
     }
 
     @Override
@@ -125,8 +127,10 @@ public class AddAlertOneOffEvent extends Fragment implements DatePickerFragment.
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aaa");
         time.set(0,0,0,hourOfDay,minute);
         startTime.setText(dateFormat.format(time.getTime()));
-        Log.d("Change Time to",time.getTime().toString());
-        callback.onAddSpecsData(HourSpecs.TAG_STARTTIME,time);
+        Log.d("Change Time to", time.getTime().toString());
+        callback.onAddSpecsData(HourSpecs.TAG_STARTTIME, time);
+        callback.onAddSpecsData(HourSpecs.TAG_ENDTIME,time);
+
     }
 
     private void setupInitialValues(Bundle data){

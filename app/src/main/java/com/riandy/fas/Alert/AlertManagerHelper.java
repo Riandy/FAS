@@ -27,7 +27,8 @@ public class AlertManagerHelper extends BroadcastReceiver {
     public static final String TIME_HOUR = "timeHour";
     public static final String TIME_MINUTE = "timeMinute";
     public static final String TONE = "alarmTone";
-    static boolean counterReset = false;
+    public static boolean counterReset = false;
+    public static boolean isNextDay = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,7 +52,9 @@ public class AlertManagerHelper extends BroadcastReceiver {
             if(alert.isEnabled()) {
                 //Log.d("Alert", "alert enabled");
                 counterReset = false;
-                LocalTime localTime = getValidTime(alert.getAlertSpecs().getHourSpecs());
+                isNextDay = false;
+                Log.d("riandy ",alert.toString());
+                LocalTime localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
                 LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
 
                 if(localDate == null || localTime == null) {
@@ -74,7 +77,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
     }
 
-    private static LocalDate getValidDate(DaySpecs daySpecs, HourSpecs hourSpecs){
+    public static LocalDate getValidDate(DaySpecs daySpecs, HourSpecs hourSpecs){
         //check if its between today is between the startDate and endDate
         LocalDate startDate,endDate,today;
         today = new LocalDate();
@@ -93,10 +96,12 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 //look from dayOfWeek (1..7)
                 int day = today.getDayOfWeek();
                 for (int i = 0; i < 7 ; i++) {
-                    if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime))
+                    if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime) && !isNextDay)
                         return today.plusDays(i);
-                    else
+                    else {
                         startTimeIsAfterNow = true;
+                        isNextDay = false;
+                    }
                 }
             }else{
                 return today.plusDays(daySpecs.getEveryNDays());
@@ -110,11 +115,12 @@ public class AlertManagerHelper extends BroadcastReceiver {
             Log.d("riandy ","within startDate and endDate");
             int i, day = today.getDayOfWeek();
             for( i = 0; i < 7; i++ ){
-                if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime) && !counterReset)
+                if(dayOfWeek[(day+i)%7] == true && (startTimeIsAfterNow || nowIsBeforeEndTime) && !counterReset  && !isNextDay)
                     break;
                 else {
                     startTimeIsAfterNow = true;
                     counterReset = false;
+                    isNextDay = false;
                 }
             }
             today = today.plusDays(i);
@@ -123,22 +129,29 @@ public class AlertManagerHelper extends BroadcastReceiver {
                     (today.isBefore(endDate) || today.isEqual(endDate))) {
                 return today;
             }
+        } else if (startDate.isAfter(today)){
+            return startDate;
         }
         Log.e("ERROR getValidDate", "return null value");
         return null;
     }
 
-    private static LocalTime getValidTime(HourSpecs hourSpecs){
+    public static LocalTime getValidTime(DaySpecs daySpecs, HourSpecs hourSpecs){
         LocalTime startTime,endTime,today;
         today = new LocalTime();
 
+        if(daySpecs.getStartDate().isAfter(new LocalDate())){
+            today = new LocalTime(0,0,0);
+        }
         startTime = hourSpecs.getStartTime();
         endTime = hourSpecs.getEndTime();
+        Log.d("riandy getVaidTime","ok");
 
         if(hourSpecs.getHourType() == HourSpecs.HourTypes.EXACTTIME){
+            Log.d("riandy exacttime","ok");
             today = startTime;
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.RANDOM){
-            Log.d("AlertManagerHelper","Random");
+            Log.d("riandy ","Random");
             int currentCounter = hourSpecs.getCurrentCounter();
             int numOfTimes = hourSpecs.getNumOfTimes();
             if (numOfTimes >  currentCounter){
@@ -153,6 +166,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
                     }
                 }
 
+                Log.d("riandy ",endTime.toString() +" "+ hourSpecs.getLastAlertTime().toString());
                 Log.d("riandy ",hourSpecs.getLastAlertTime().toString());
                 int time = r.nextInt(endTime.getMillisOfDay()-hourSpecs.getLastAlertTime().getMillisOfDay());
                 today = hourSpecs.getLastAlertTime().plusMillis(time);
@@ -169,7 +183,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 counterReset = true;
             }
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.TIMERANGE){
-
+            Log.d("riandy timerange","ok");
             LocalTime lastAlertTime = new LocalTime(hourSpecs.getLastAlertTime());
             int intervalInMinutes = hourSpecs.getIntervalInHour() * 60;
             Log.d("riandy lastAlertTime",hourSpecs.getLastAlertTime().toString()+" interval = " +intervalInMinutes);
@@ -182,17 +196,23 @@ public class AlertManagerHelper extends BroadcastReceiver {
             }else if( (lastAlertTime.isAfter(hourSpecs.getStartTime()) || lastAlertTime.isEqual(hourSpecs.getStartTime()))
                     && lastAlertTime.isBefore(hourSpecs.getEndTime())){
                 //last alert time between start time and end time
-                Log.d("riandy ","is between start time and end time");
-                hourSpecs.setLastAlertTime(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes));
+                Log.d("riandy ", "is between start time and end time");
+                if(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes).isAfter(hourSpecs.getEndTime())){
+                    Log.d("riandy ", "THE NEXT DAY");
+                    isNextDay = true;
+                    hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
+                }else{
+                    hourSpecs.setLastAlertTime(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes));
+                }
                 today = hourSpecs.getLastAlertTime();
                 Log.d("riandy today",today.toString());
             }else if( lastAlertTime.isBefore(endTime) && today.isAfter(startTime)){
                 Log.d("riandy ","alert set after start time");
                 int minutesDiff = ( endTime.getMillisOfDay() - startTime.getMillisOfDay() ) / 1000 / 60 ;
-                Log.d("riandy ","minutesDiff "+ minutesDiff/60 );
+                Log.d("riandy ","hourDiff "+ minutesDiff/60 );
                 LocalTime temp = new LocalTime(startTime);
                 for(int i = 0; i <= minutesDiff; i+=intervalInMinutes){
-                    temp = temp.plusMinutes(minutesDiff);
+                    temp = temp.plusMinutes(intervalInMinutes);
                     Log.d("riandy ","i="+i+" "+temp.toString());
                     if(temp.isAfter(today)) {
                         hourSpecs.setLastAlertTime(temp);
@@ -213,7 +233,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
         if(today.isBefore(hourSpecs.getEndTime())||today.isEqual(hourSpecs.getEndTime()))
             return today;
         else
-            return null;
+            return hourSpecs.getStartTime();
     }
 
     public static void cancelAlerts(Context context) {

@@ -87,9 +87,11 @@ public class Notif {
 	}	
 
 	public void setAppToRun(String packageName) {
+		PInfo pInfo = new PInfo(_ctx);
+
 		PackageManager manager = _ctx.getPackageManager();
 		try {
-		    _resultIntent = manager.getLaunchIntentForPackage(packageName);
+		    _resultIntent = manager.getLaunchIntentForPackage(pInfo.getPackageName(packageName));
 		    if (_resultIntent == null)
 		        throw new PackageManager.NameNotFoundException();
 		    _resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);

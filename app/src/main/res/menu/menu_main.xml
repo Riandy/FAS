@@ -4,6 +4,7 @@
         android:icon="@drawable/ic_action_search"
         android:orderInCategory="0"
         android:showAsAction="ifRoom"
+        android:actionViewClass="android.widget.SearchView"
         android:title="@string/action_search"/>
 
     <!-- add button -->

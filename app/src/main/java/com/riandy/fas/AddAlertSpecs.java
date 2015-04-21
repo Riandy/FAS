@@ -306,9 +306,9 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
         endTime.setText(specs.getHourSpecs().getEndTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
         startTimeOnce.setText(specs.getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
 
-        boolean[] arr = specs.getDaySpecs().getDayOfWeek();
+        daySelected = specs.getDaySpecs().getDayOfWeek();
         for(int i=0;i<7;i++){
-            dayOfWeek[i].setChecked(arr[i]);
+            dayOfWeek[i].setChecked(daySelected[i]);
         }
 
         //TODO Fix this
@@ -333,13 +333,6 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
         else if(specs.getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
             ((RadioButton) view.findViewById(R.id.radioButton_everyXHours)).setChecked(true);
 
-        /*
-            Switch unlimitedDateRange;
-    TextView startDate,endDate,startTime,endTime,startTimeOnce;
-    ToggleButton[] dayOfWeek;
-    EditText everyNDays,numOfTimeOrHour;
-    RadioGroup radioGroupFreq, radioGroupFreqX;
-         */
     }
 
     private void showTimeDialog(String type){

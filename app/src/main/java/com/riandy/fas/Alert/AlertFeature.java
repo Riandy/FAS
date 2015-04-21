@@ -122,6 +122,7 @@ public class AlertFeature {
 
             }
         });
+        mPlayer.setVolume(0.6f,0.6f);
         try {
             if (tone != null && !tone.equals("")) {
                 Uri toneUri = Uri.parse(tone);
@@ -134,7 +135,7 @@ public class AlertFeature {
                 }
             }else{
                 AssetFileDescriptor descriptor = context.getAssets().openFd("elegant_ringtone.mp3");
-                mPlayer.setDataSource(descriptor.getFileDescriptor(),descriptor.getStartOffset(),descriptor.getLength());
+                mPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(),descriptor.getLength());
                 mPlayer.setLooping(true);
                 mPlayer.prepare();
                 mPlayer.start();

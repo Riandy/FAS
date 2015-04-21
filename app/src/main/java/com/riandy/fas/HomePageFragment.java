@@ -16,10 +16,12 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertManagerHelper;
 import com.riandy.fas.Alert.AlertModel;
+import com.riandy.fas.Alert.DaySpecs;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -143,6 +145,9 @@ public class HomePageFragment extends Fragment {
     }
 
 
+    public void showAlertBySearch(){
+        Toast.makeText(view.getContext(),"testtest",Toast.LENGTH_SHORT).show();
+    }
     public void showAlert(LocalDate date){
         List<AlertModel> tempList = AlertDBHelper.getInstance(view.getContext()).getAlerts();
         if(alertList!=null)
@@ -150,7 +155,8 @@ public class HomePageFragment extends Fragment {
         for(AlertModel model:tempList){
             if(date==null //show everything
                 || model.getAlertSpecs().getDaySpecs().getStartDate().equals(date) // exact date alert
-                || isBetweenDate(date,model) // between startDate and endDate
+                || isBetweenDate(date, model) // between startDate and endDate
+                || ( model.getAlertSpecs().getDaySpecs().getDayType() == DaySpecs.DayTypes.UNLIMITED )
               ){
                 alertList.add(model);
             }

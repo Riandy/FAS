@@ -3,7 +3,10 @@ package com.riandy.fas;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +19,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
@@ -94,9 +99,10 @@ public class MainActivity extends Activity {
         }else{
             fragment = new SplashScreen();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
-            //testAlert();
-            //AlertManagerHelper.setAlerts(getApplicationContext());
         }
+
+//        SchedulerTest test = new SchedulerTest();
+//        test.runTest();
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
@@ -112,7 +118,37 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+            SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+            search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+                    Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+                    if(fragment!=null && fragment instanceof HomePageFragment)
+                        ((HomePageFragment)fragment).showAlertBySearch();
+                    else
+                        Toast.makeText(getApplicationContext(),"test", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                }
+
+            });
+
+        }
         return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -284,7 +320,7 @@ public class MainActivity extends Activity {
     }
 
     //For Testing only. can be removed later
-    private String convertBooleanArrayToString(boolean[] arr){
+    public static String convertBooleanArrayToString(boolean[] arr){
 
         String repeatingDays = "";
         for (int i = 0; i < 7; ++i) {

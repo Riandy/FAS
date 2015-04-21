@@ -150,7 +150,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/editText_everyNDays"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:inputType="number" />
     </LinearLayout>
     <View style="@style/Divider"/>
     <TextView
@@ -257,7 +258,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_numOfTimes"
-            android:hint="Specify X" />
+            android:hint="Specify X"
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
