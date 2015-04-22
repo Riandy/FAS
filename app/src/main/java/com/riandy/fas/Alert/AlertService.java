@@ -29,8 +29,9 @@ public class AlertService extends Service {
             Log.d("READING", "" + intent.getExtras().getInt("id"));
         }
         getApplication().startActivity(alarmIntent);
-        Log.d("riandy","setting alert");
-        AlertManagerHelper.setAlerts(this);
+        Log.d("riandy", "setting alert");
+        AlertManagerHelper.setAlert(this,AlertDBHelper.getInstance(this).getAlert(intent.getExtras().getInt("id")));
+        //AlertManagerHelper.setAlerts(this);
 
         return super.onStartCommand(intent, flags, startId);
     }

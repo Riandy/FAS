@@ -35,6 +35,41 @@ public class AlertManagerHelper extends BroadcastReceiver {
         setAlerts(context);
     }
 
+    public static void setAlert(Context context,AlertModel alert){
+
+        if(alert==null)
+            return;
+
+        cancelAlert(context,alert);
+
+        Calendar calendar = Calendar.getInstance();
+
+        if(alert.isEnabled()) {
+            //Log.d("Alert", "alert enabled");
+            counterReset = false;
+            isNextDay = false;
+            Log.d("riandy ",alert.toString());
+            LocalTime localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
+            LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
+
+            if(localDate == null || localTime == null) {
+                Log.d("riandy " , " alarm expired "+localDate + " " +localTime);
+                return;
+            }
+            calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
+                    localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
+            if(calendar.before(Calendar.getInstance())) { // date has passed. just continue;
+                Log.d("riandy Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
+                return;
+            }
+            AlertDBHelper.getInstance(context).updateAlert(alert);
+            PendingIntent pIntent = createPendingIntent(context, alert);
+            setAlert(context,calendar,pIntent);
+        }else{
+            Log.d("Alert "+alert.id, "alert not enabled");
+        }
+    }
+
     public static void setAlerts(Context context) {
         Log.d("riandy","setting all alerts");
 
