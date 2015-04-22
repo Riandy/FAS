@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertFeature;
@@ -136,10 +135,8 @@ public class MainActivity extends Activity {
                 @Override
                 public boolean onQueryTextChange(String query) {
                     Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
-                    if(fragment!=null && fragment instanceof HomePageFragment)
-                        ((HomePageFragment)fragment).showAlertBySearch();
-                    else
-                        Toast.makeText(getApplicationContext(),"test", Toast.LENGTH_SHORT).show();
+                    if(fragment!=null && fragment instanceof HomePageFragment && !query.equals(""))
+                        ((HomePageFragment)fragment).showAlertBySearch(query);
                     return true;
 
                 }

@@ -16,7 +16,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.riandy.fas.Alert.AlertDBHelper;
 import com.riandy.fas.Alert.AlertManagerHelper;
@@ -145,8 +144,25 @@ public class HomePageFragment extends Fragment {
     }
 
 
-    public void showAlertBySearch(){
-        Toast.makeText(view.getContext(),"testtest",Toast.LENGTH_SHORT).show();
+    public void showAlertBySearch(String query){
+        List<AlertModel> tempList = AlertDBHelper.getInstance(view.getContext()).getAlerts();
+        if(alertList!=null)
+            alertList.clear();
+        for(AlertModel model:tempList){
+            if(model.getAlertFeature().getName().toLowerCase().contains(query.toLowerCase()) ||
+                    model.getAlertFeature().getDescription().toLowerCase().contains(query.toLowerCase()) ){
+                alertList.add(model);
+            }
+        }
+        TextView message = (TextView) view.findViewById(R.id.textView_noAlertsScheduled);
+
+        if(alertList.isEmpty()){
+            message.setVisibility(View.VISIBLE);
+        }else{
+            message.setVisibility(View.GONE);
+        }
+        listView.setAdapter(adapter);
+
     }
     public void showAlert(LocalDate date){
         List<AlertModel> tempList = AlertDBHelper.getInstance(view.getContext()).getAlerts();
