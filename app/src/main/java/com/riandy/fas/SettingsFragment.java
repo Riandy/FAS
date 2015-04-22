@@ -59,12 +59,11 @@ public class SettingsFragment extends Fragment {
                 SharedPreferences.Editor editor = context.getSharedPreferences(MY_PREFS_NAME, context.MODE_PRIVATE).edit();
                 editor.putBoolean("enableSync", isChecked);
                 editor.commit();
-                GoogleCalendarSync gCal = new GoogleCalendarSync(context,1);
-                if(isChecked) {
+                GoogleCalendarSync gCal = new GoogleCalendarSync(context, 1);
+                if (isChecked) {
                     Toast.makeText(context, "FAS will sync to your google calendar.", Toast.LENGTH_SHORT).show();
                     gCal.addAllAlerts();
-                }
-                else {
+                } else {
                     Toast.makeText(context, "FAS will not sync to your google calendar.", Toast.LENGTH_SHORT).show();
                     gCal.deleteAllAlerts();
                 }
@@ -105,8 +104,10 @@ public class SettingsFragment extends Fragment {
             case FILE_SELECT_CODE:
                 if (resultCode == getActivity().RESULT_OK) {
                     Uri uri = data.getData();
-                    Log.d("FILE", "File Uri: " + uri.getPath());
-                    List<AlertModel> list = AlertParser.parse(uri.getPath());
+                    Log.d("FILE", "File Uri: " + uri.getPath()+ " " +uri.getPathSegments().toString());
+                    AlertParser alertParser = new AlertParser(context);
+                    List<AlertModel> list = alertParser.parse(uri);
+                    Log.d("riandy","parsing alerts = "+list.size());
                     for(AlertModel model:list){
                         AlertDBHelper.getInstance(this.getActivity()).createAlert(model);
                     }
