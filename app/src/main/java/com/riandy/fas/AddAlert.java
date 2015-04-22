@@ -134,7 +134,7 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setDescription(alertDescription.getText().toString());
                 AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
                 //Log.d("AddAlert alert",alert.toString());
-
+                long id;
                 if(alert.getAlertSpecs().getDaySpecs().getStartDate().isAfter(alert.getAlertSpecs().getDaySpecs().getEndDate())){
                     Toast.makeText(view.getContext(),"start date cannot be later than end date",Toast.LENGTH_SHORT).show();
                 }else if(alert.getAlertSpecs().getHourSpecs().getStartTime().isAfter(alert.getAlertSpecs().getHourSpecs().getEndTime())){
@@ -142,15 +142,16 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 }else {
                     if (isNewAlert) {
                         //save it. create new alert
-                        long id = db.createAlert(alert);
+                        id = db.createAlert(alert);
                         Log.d("new alert", "" + id + " created");
                     } else {
                         //save only the changes.
-                        long id = db.updateAlert(alert);
+                        id = db.updateAlert(alert);
                         Log.d("update alert", "" + id + " updated");
                     }
                     //AlertManagerHelper.setAlerts(view.getContext());
-                    AlertManagerHelper.setAlert(view.getContext(),alert);
+                    AlertDBHelper dbHelper = new AlertDBHelper(view.getContext());
+                    AlertManagerHelper.setAlert(view.getContext(),dbHelper.getAlert(id));
                     getFragmentManager().popBackStack();
                 }
             }
