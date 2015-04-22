@@ -60,7 +60,7 @@ public class AlertsArrayAdapter extends ArrayAdapter {
                 AlertDBHelper db = new AlertDBHelper(context);
                 db.updateAlert(data);
                 Log.d("alert",data.toString());
-                AlertManagerHelper.setAlerts(context);
+                //AlertManagerHelper.setAlerts(context);
             }
         });
         return rowView;

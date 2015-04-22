@@ -120,7 +120,7 @@ public class HomePageFragment extends Fragment {
                         AlertDBHelper.getInstance(v.getContext()).deleteAlert(((AlertModel) adapter.getItem(positionToRemove)).id);
                         alertList.remove(positionToRemove);
                         adapter.notifyDataSetChanged();
-                        AlertManagerHelper.setAlerts(v.getContext());
+                        //AlertManagerHelper.setAlerts(v.getContext());
                     }
                 });
                 adb.show();

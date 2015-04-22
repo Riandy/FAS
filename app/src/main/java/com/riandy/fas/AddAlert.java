@@ -149,7 +149,8 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                         long id = db.updateAlert(alert);
                         Log.d("update alert", "" + id + " updated");
                     }
-                    AlertManagerHelper.setAlerts(view.getContext());
+                    //AlertManagerHelper.setAlerts(view.getContext());
+                    AlertManagerHelper.setAlert(view.getContext(),alert);
                     getFragmentManager().popBackStack();
                 }
             }
