@@ -37,9 +37,10 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
     public static void setAlert(Context context,AlertModel alert){
 
-        if(alert==null)
+        if(alert==null) {
+            Log.d("riandy ","ALERT NULL");
             return;
-
+        }
         cancelAlert(context,alert);
 
         Calendar calendar = Calendar.getInstance();

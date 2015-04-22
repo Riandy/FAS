@@ -116,7 +116,7 @@ public class HomePageFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         //cancel the alert first
 
-                        AlertManagerHelper.cancelAlert(v.getContext(),(AlertModel) adapter.getItem(positionToRemove));
+                        AlertManagerHelper.cancelAlert(v.getContext(), (AlertModel) adapter.getItem(positionToRemove));
                         AlertDBHelper.getInstance(v.getContext()).deleteAlert(((AlertModel) adapter.getItem(positionToRemove)).id);
                         alertList.remove(positionToRemove);
                         adapter.notifyDataSetChanged();
@@ -190,14 +190,21 @@ public class HomePageFragment extends Fragment {
     public boolean isBetweenDate(LocalDate date, AlertModel model){
         boolean result;
 
+        Log.d("riandy",date.toString()+" "+model.getAlertSpecs().getDaySpecs().getStartDate().toString()+" "+model.getAlertSpecs().getDaySpecs().getEndDate().toString());
         if( (date.isAfter(model.getAlertSpecs().getDaySpecs().getStartDate()) || // between startDate and endDate
                 date.isEqual(model.getAlertSpecs().getDaySpecs().getStartDate())) &&
                 (date.isBefore(model.getAlertSpecs().getDaySpecs().getEndDate()) ||
                 date.isEqual(model.getAlertSpecs().getDaySpecs().getEndDate()))){
 
             if(model.getAlertSpecs().getDaySpecs().getEveryNDays()==0){
+                Log.d("riandy","i am here");
                 boolean[] dayOfWeek = model.getAlertSpecs().getDaySpecs().getDayOfWeek();
-                result = dayOfWeek[date.getDayOfWeek()-1];
+                Log.d("riandy","dayOfWeek "+MainActivity.convertBooleanArrayToString(dayOfWeek)+" "+ date.getDayOfWeek());
+                if(date.getDayOfWeek()==7){
+                    result = dayOfWeek[0];
+                }else {
+                    result = dayOfWeek[date.getDayOfWeek()];
+                }
             }else{
                 //check from everyNDays
                 Log.d("riandy ","isbetweenDate2 = "+date.getDayOfYear()+" "+model.getAlertSpecs().getDaySpecs().getStartDate().getDayOfYear()+" " +model.getAlertSpecs().getDaySpecs().getEveryNDays());

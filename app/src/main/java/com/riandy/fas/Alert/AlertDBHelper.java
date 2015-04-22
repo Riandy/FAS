@@ -208,7 +208,8 @@ public class AlertDBHelper extends SQLiteOpenHelper {
         gCal.updateAlert(model);
         ContentValues values = populateContent(model);
         Log.d("updating alert ",model.toString());
-        return getWritableDatabase().update(Alert.TABLE_NAME, values, Alert._ID + " = ?", new String[] { String.valueOf(model.id)});
+        getWritableDatabase().update(Alert.TABLE_NAME, values, Alert._ID + " = ?", new String[] { String.valueOf(model.id)});
+        return model.id;
     }
 
     public AlertModel getAlert(long id){
