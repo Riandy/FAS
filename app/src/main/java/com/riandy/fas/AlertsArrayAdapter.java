@@ -55,12 +55,13 @@ public class AlertsArrayAdapter extends ArrayAdapter {
         enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AlertManagerHelper.cancelAlert(context,data);
+                AlertManagerHelper.cancelAlert(context, data);
                 data.setEnabled(isChecked);
                 AlertDBHelper db = new AlertDBHelper(context);
                 db.updateAlert(data);
-                Log.d("alert",data.toString());
-                //AlertManagerHelper.setAlerts(context);
+                Log.d("alert", data.toString());
+                AlertManagerHelper.setAlert(context,data);
+               // AlertManagerHelper.setAlerts(context);
             }
         });
         return rowView;

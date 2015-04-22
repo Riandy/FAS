@@ -30,6 +30,9 @@ public class AlertManagerHelper extends BroadcastReceiver {
     public static boolean counterReset = false;
     public static boolean isNextDay = false;
 
+    static LocalTime localTime;
+    static LocalDate localDate;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         setAlerts(context);
@@ -41,7 +44,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
             Log.d("riandy ","ALERT NULL");
             return;
         }
-        cancelAlert(context,alert);
+        cancelAlert(context, alert);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -50,8 +53,8 @@ public class AlertManagerHelper extends BroadcastReceiver {
             counterReset = false;
             isNextDay = false;
             Log.d("riandy ",alert.toString());
-            LocalTime localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
-            LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
+            localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
+            localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
 
             if(localDate == null || localTime == null) {
                 Log.d("riandy " , " alarm expired "+localDate + " " +localTime);
@@ -67,7 +70,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
             PendingIntent pIntent = createPendingIntent(context, alert);
             setAlert(context,calendar,pIntent);
         }else{
-            Log.d("Alert "+alert.id, "alert not enabled");
+            Log.d("riandy Alert "+alert.id, "alert not enabled");
         }
     }
 
@@ -78,37 +81,12 @@ public class AlertManagerHelper extends BroadcastReceiver {
 
         AlertDBHelper dbHelper = AlertDBHelper.getInstance(context);
         List<AlertModel> alerts =  dbHelper.getAlerts();
-        Calendar calendar = Calendar.getInstance();
 
         if(alerts==null)
             return;
 
         for (AlertModel alert : alerts) {
-
-            if(alert.isEnabled()) {
-                //Log.d("Alert", "alert enabled");
-                counterReset = false;
-                isNextDay = false;
-                Log.d("riandy ",alert.toString());
-                LocalTime localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
-                LocalDate localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
-
-                if(localDate == null || localTime == null) {
-                    Log.d("riandy " , " alarm expired "+localDate + " " +localTime);
-                    continue;
-                }
-                calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
-                        localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
-                if(calendar.before(Calendar.getInstance())) { // date has passed. just continue;
-                    Log.d("riandy Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
-                    continue;
-                }
-                AlertDBHelper.getInstance(context).updateAlert(alert);
-                PendingIntent pIntent = createPendingIntent(context, alert);
-                setAlert(context,calendar,pIntent);
-            }else{
-                Log.d("Alert "+alert.id, "alert not enabled");
-            }
+            setAlert(context,alert);
         }
 
     }
@@ -140,7 +118,11 @@ public class AlertManagerHelper extends BroadcastReceiver {
                     }
                 }
             }else{
-                return today.plusDays(daySpecs.getEveryNDays());
+                if(localTime!=null && localTime.isAfter(new LocalTime())){
+                    return today;
+                }else {
+                    return today.plusDays(daySpecs.getEveryNDays());
+                }
             }
         } else if(daySpecs.getDayType() == DaySpecs.DayTypes.DATEONLY || daySpecs.getStartDate().isEqual(daySpecs.getEndDate())){ //one off event && exact date
             return startDate;
@@ -162,7 +144,11 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 }
                 today = today.plusDays(i);
             }else{
-                today = today.plusDays(daySpecs.getEveryNDays());
+                if(localTime!=null && localTime.isAfter(new LocalTime())) {
+
+                }else {
+                    today = today.plusDays(daySpecs.getEveryNDays());
+                }
             }
             //check if its within date range
             if((today.isAfter(startDate) || today.isEqual(startDate)) &&
