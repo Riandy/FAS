@@ -57,7 +57,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         final View view = inflater.inflate(R.layout.fragment_add_alert, container, false);
 
         if(getArguments()!=null){
-            Log.d("alert model","received");
             alert = getArguments().getParcelable(AlertModel.TAG_ALERT_MODEL);
             isNewAlert = false;
         }
@@ -65,7 +64,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         if(alert==null){
             alert = new AlertModel();
             isNewAlert = true;
-            Log.d("DEBUG","new alert model created");
         }
 
         //refactor this later
@@ -86,11 +84,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         addAlertFeature = new AddAlertFeature();
 
         setupInitialValues();
-
-//        addAlertSpecsOneOff.setArguments(getAddSpecsBundle());
-//        getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, addAlertSpecsOneOff).commit();
-//
-//        addAlertSpecs.setArguments(getAddSpecsBundle());
 
         addAlertFeature.setTargetFragment(this, ADD_FEATURE_FRAGMENT);
         addAlertFeature.setArguments(getAddFeatureBundle());
@@ -133,7 +126,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertFeature().setName(alertName.getText().toString());
                 alert.getAlertFeature().setDescription(alertDescription.getText().toString());
                 AlertDBHelper db = AlertDBHelper.getInstance(view.getContext());
-                //Log.d("AddAlert alert",alert.toString());
                 long id;
                 if(alert.getAlertSpecs().getDaySpecs().getStartDate().isAfter(alert.getAlertSpecs().getDaySpecs().getEndDate())){
                     Toast.makeText(view.getContext(),"start date cannot be later than end date",Toast.LENGTH_SHORT).show();
@@ -149,7 +141,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                         id = db.updateAlert(alert);
                         Log.d("update alert", "" + id + " updated");
                     }
-                    //AlertManagerHelper.setAlerts(view.getContext());
                     AlertDBHelper dbHelper = new AlertDBHelper(view.getContext());
                     AlertManagerHelper.setAlert(view.getContext(),dbHelper.getAlert(id));
                     getFragmentManager().popBackStack();
@@ -191,7 +182,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
 
     @Override
     public void onAddSpecsData(String tag, Object data) {
-        Log.d("CHANGING",tag+ " " + data.toString());
 
         switch (tag){
             case DaySpecs.TAG_STARTDATE:
@@ -218,14 +208,12 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                 alert.getAlertSpecs().getDaySpecs().setDayType(DaySpecs.DayTypes.values()[(int)data]);
                 break;
             case DaySpecs.TAG_EVERYNDAYS:
-                //TODO fix this
                 alert.getAlertSpecs().getDaySpecs().setEveryNDays(Integer.parseInt((String)data));
                 break;
             case HourSpecs.TAG_HOURTYPE:
                 alert.getAlertSpecs().getHourSpecs().setHourType(HourSpecs.HourTypes.values()[(int)data]);
                 break;
             case HourSpecs.TAG_INTERVAL_OR_NUMOFTIMES:
-                //TODO fix this
                 if(!data.equals("")) {
                     if (alert.getAlertSpecs().getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
                         alert.getAlertSpecs().getHourSpecs().setIntervalInHour(Integer.parseInt((String) data));
@@ -233,7 +221,6 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
                         alert.getAlertSpecs().getHourSpecs().setNumOfTimes(Integer.parseInt((String) data));
                 }
             default:
-                Log.d("Not done",tag);
                 break;
         }
     }
@@ -261,13 +248,11 @@ public class AddAlert extends Fragment implements AddAlertFeature.OnAddAlertFeat
         alertDescription.setText(alert.getAlertFeature().getDescription());
 
         if(alert.getAlertSpecs().getDaySpecs().getDayType() == DaySpecs.DayTypes.DATEONLY){
-            Log.d("note","date only");
             customizedSpecs.setChecked(true);
             addAlertSpecsOneOff.setArguments(getAddSpecsBundle());
             getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, addAlertSpecsOneOff).commit();
 
         }else{
-            Log.d("note","date range");
             customizedSpecs.setChecked(false);
             addAlertSpecs.setArguments(getAddSpecsBundle());
             getFragmentManager().beginTransaction().replace(R.id.fragment_container_add_alert_specs, addAlertSpecs).commit();

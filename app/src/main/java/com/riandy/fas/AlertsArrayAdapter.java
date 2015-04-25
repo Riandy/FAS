@@ -45,7 +45,6 @@ public class AlertsArrayAdapter extends ArrayAdapter {
         ToggleButton enabled = (ToggleButton) rowView.findViewById(R.id.toggleButton_enabled);
 
         final AlertModel data = list.get(position);
-        //Log.d("alertsArrayAdapter alert ",data.toString());
         if(data.getAlertSpecs().getHourSpecs().getHourType()== HourSpecs.HourTypes.EXACTTIME)
             startTime.setText(data.getAlertSpecs().getHourSpecs().getStartTime().toString(DateTimeFormat.forPattern("hh:mm aaa")));
         else
@@ -61,7 +60,6 @@ public class AlertsArrayAdapter extends ArrayAdapter {
                 db.updateAlert(data);
                 Log.d("alert", data.toString());
                 AlertManagerHelper.setAlert(context,data);
-               // AlertManagerHelper.setAlerts(context);
             }
         });
         return rowView;

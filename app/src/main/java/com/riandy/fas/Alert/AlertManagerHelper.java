@@ -41,7 +41,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
     public static void setAlert(Context context,AlertModel alert){
 
         if(alert==null) {
-            Log.d("riandy ","ALERT NULL");
+            Log.d("FAS AlertManagerHelper ","ALERT NULL");
             return;
         }
         cancelAlert(context, alert);
@@ -49,33 +49,32 @@ public class AlertManagerHelper extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
 
         if(alert.isEnabled()) {
-            //Log.d("Alert", "alert enabled");
             counterReset = false;
             isNextDay = false;
-            Log.d("riandy ",alert.toString());
+            Log.d("FAS AlertManagerHelper ",alert.toString());
             localTime = getValidTime(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
             localDate = getValidDate(alert.getAlertSpecs().getDaySpecs(),alert.getAlertSpecs().getHourSpecs());
 
             if(localDate == null || localTime == null) {
-                Log.d("riandy " , " alarm expired "+localDate + " " +localTime);
+                Log.d("FAS AlertManagerHelper " , " alarm expired "+localDate + " " +localTime);
                 return;
             }
             calendar.set(localDate.getYear(), localDate.getMonthOfYear()-1, localDate.getDayOfMonth(),
                     localTime.getHourOfDay(), localTime.getMinuteOfHour(), localTime.getSecondOfMinute());
             if(calendar.before(Calendar.getInstance())) { // date has passed. just continue;
-                Log.d("riandy Alarm expired",calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
+                Log.d("FAS AlertManagerHelper ","Alarm expired "+calendar.getTime().toString()+" "+Calendar.getInstance().getTime().toString());
                 return;
             }
             AlertDBHelper.getInstance(context).updateAlert(alert);
             PendingIntent pIntent = createPendingIntent(context, alert);
             setAlert(context,calendar,pIntent);
         }else{
-            Log.d("riandy Alert "+alert.id, "alert not enabled");
+            Log.d("FAS AlertManagerHelper Alert "+alert.id, "alert not enabled");
         }
     }
 
     public static void setAlerts(Context context) {
-        Log.d("riandy","setting all alerts");
+        Log.d("FAS AlertManagerHelper","setting all alerts");
 
         cancelAlerts(context);
 
@@ -101,11 +100,11 @@ public class AlertManagerHelper extends BroadcastReceiver {
         LocalTime lastAlertTime = hourSpecs.getStartTime();
         boolean startTimeIsAfterNow = lastAlertTime.isAfter(new LocalTime());
         boolean nowIsBeforeEndTime = new LocalTime().isBefore(hourSpecs.getEndTime());
-        Log.d("riandy nowIsBeforeETime",""+nowIsBeforeEndTime);
+        Log.d("FAS AlertManagerHelper nowIsBeforeETime",""+nowIsBeforeEndTime);
         boolean[] dayOfWeek = daySpecs.getDayOfWeek();
 
         if(daySpecs.getDayType() == DaySpecs.DayTypes.UNLIMITED){ //unlimited event
-            Log.d("riandy","alert type = unlimited "+startTimeIsAfterNow);
+            Log.d("FAS AlertManagerHelper","alert type = unlimited "+startTimeIsAfterNow);
             if(daySpecs.getEveryNDays()==0){
                 //look from dayOfWeek (1..7)
                 int day = today.getDayOfWeek();
@@ -130,7 +129,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
         } else if((today.isAfter(startDate) || today.isEqual(startDate)) &&
                 (today.isBefore(endDate) || today.isEqual(endDate))){ //within range of startDate and endDate
             //find the nearest available date
-            Log.d("riandy ","within startDate and endDate");
+            Log.d("FAS AlertManagerHelper ","within startDate and endDate");
             if(daySpecs.getEveryNDays()==0) {
                 int i, day = today.getDayOfWeek();
                 for (i = 0; i < 7; i++) {
@@ -171,13 +170,13 @@ public class AlertManagerHelper extends BroadcastReceiver {
         }
         startTime = hourSpecs.getStartTime();
         endTime = hourSpecs.getEndTime();
-        Log.d("riandy getVaidTime","ok");
+        Log.d("FAS AlertManagerHelper getVaidTime","ok");
 
         if(hourSpecs.getHourType() == HourSpecs.HourTypes.EXACTTIME){
-            Log.d("riandy exacttime","ok");
+            Log.d("FAS AlertManagerHelper exacttime","ok");
             today = startTime;
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.RANDOM){
-            Log.d("riandy ","Random");
+            Log.d("FAS AlertManagerHelper ","Random");
             int currentCounter = hourSpecs.getCurrentCounter();
             int numOfTimes = hourSpecs.getNumOfTimes();
             if (numOfTimes >  currentCounter){
@@ -192,14 +191,14 @@ public class AlertManagerHelper extends BroadcastReceiver {
                     }
                 }
 
-                Log.d("riandy ",endTime.toString() +" "+ hourSpecs.getLastAlertTime().toString());
-                Log.d("riandy ",hourSpecs.getLastAlertTime().toString());
+                Log.d("FAS AlertManagerHelper ",endTime.toString() +" "+ hourSpecs.getLastAlertTime().toString());
+                Log.d("FAS AlertManagerHelper ",hourSpecs.getLastAlertTime().toString());
                 int time = r.nextInt(endTime.getMillisOfDay()-hourSpecs.getLastAlertTime().getMillisOfDay());
                 today = hourSpecs.getLastAlertTime().plusMillis(time);
                 hourSpecs.setLastAlertTime(today);
                 hourSpecs.setCurrentCounter(++currentCounter);
             }else{
-                Log.d("riandy numOfTimes ","over");
+                Log.d("FAS AlertManagerHelper numOfTimes ","over");
                 //reset startTime and counter
                 hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
                 hourSpecs.setCurrentCounter(1);
@@ -209,47 +208,47 @@ public class AlertManagerHelper extends BroadcastReceiver {
                 counterReset = true;
             }
         }else if(hourSpecs.getHourType() == HourSpecs.HourTypes.TIMERANGE){
-            Log.d("riandy timerange","ok");
+            Log.d("FAS AlertManagerHelper timerange","ok");
             LocalTime lastAlertTime = new LocalTime(hourSpecs.getLastAlertTime());
             int intervalInMinutes = hourSpecs.getIntervalInHour() * 60;
-            Log.d("riandy lastAlertTime",hourSpecs.getLastAlertTime().toString()+" interval = " +intervalInMinutes);
+            Log.d("FAS AlertManagerHelper lastAlertTime",hourSpecs.getLastAlertTime().toString()+" interval = " +intervalInMinutes);
 
             //today time is before start time
             if(today.isBefore(hourSpecs.getStartTime())){
-                Log.d("riandy ","is before start time");
+                Log.d("FAS AlertManagerHelper ","is before start time");
                 today = hourSpecs.getStartTime();
                 hourSpecs.setLastAlertTime(today);
             }else if( (lastAlertTime.isAfter(hourSpecs.getStartTime()) || lastAlertTime.isEqual(hourSpecs.getStartTime()))
                     && lastAlertTime.isBefore(hourSpecs.getEndTime())){
                 //last alert time between start time and end time
-                Log.d("riandy ", "is between start time and end time");
+                Log.d("FAS AlertManagerHelper ", "is between start time and end time");
                 if(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes).isAfter(hourSpecs.getEndTime())){
-                    Log.d("riandy ", "THE NEXT DAY");
+                    Log.d("FAS AlertManagerHelper ", "THE NEXT DAY");
                     isNextDay = true;
                     hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
                 }else{
                     hourSpecs.setLastAlertTime(hourSpecs.getLastAlertTime().plusMinutes(intervalInMinutes));
                 }
                 today = hourSpecs.getLastAlertTime();
-                Log.d("riandy today",today.toString());
+                Log.d("FAS AlertManagerHelper today",today.toString());
             }else if( lastAlertTime.isBefore(endTime) && today.isAfter(startTime)){
-                Log.d("riandy ","alert set after start time");
+                Log.d("FAS AlertManagerHelper ","alert set after start time");
                 int minutesDiff = ( endTime.getMillisOfDay() - startTime.getMillisOfDay() ) / 1000 / 60 ;
-                Log.d("riandy ","hourDiff "+ minutesDiff/60 );
+                Log.d("FAS AlertManagerHelper ","hourDiff "+ minutesDiff/60 );
                 LocalTime temp = new LocalTime(startTime);
                 for(int i = 0; i <= minutesDiff; i+=intervalInMinutes){
                     temp = temp.plusMinutes(intervalInMinutes);
-                    Log.d("riandy ","i="+i+" "+temp.toString());
+                    Log.d("FAS AlertManagerHelper ","i="+i+" "+temp.toString());
                     if(temp.isAfter(today)) {
                         hourSpecs.setLastAlertTime(temp);
                         today = hourSpecs.getLastAlertTime();
-                        Log.d("riandy ","time set = "+ today.toString());
+                        Log.d("FAS AlertManagerHelper ","time set = "+ today.toString());
                         break;
                     }
                 }
             }else{
                 //reset the lastAlertTime into startTime
-                Log.d("riandy ","else case "+lastAlertTime.isAfter(hourSpecs.getStartTime())+" "+lastAlertTime.isEqual(hourSpecs.getStartTime())+" "
+                Log.d("FAS AlertManagerHelper ","else case "+lastAlertTime.isAfter(hourSpecs.getStartTime())+" "+lastAlertTime.isEqual(hourSpecs.getStartTime())+" "
                 + lastAlertTime.isBefore(hourSpecs.getEndTime()));
                 hourSpecs.setLastAlertTime(hourSpecs.getStartTime());
                 today = hourSpecs.getLastAlertTime();
@@ -263,7 +262,7 @@ public class AlertManagerHelper extends BroadcastReceiver {
     }
 
     public static void cancelAlerts(Context context) {
-        Log.d("Alert", "all alarms cancelled");
+        Log.d("FAS AlertManagerHelper", "all alarms cancelled");
         AlertDBHelper dbHelper = AlertDBHelper.getInstance(context);
 
         List<AlertModel> alerts =  dbHelper.getAlerts();
@@ -313,6 +312,6 @@ public class AlertManagerHelper extends BroadcastReceiver {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
         }
-        Log.d("riandy You set alarm ",calendar.getTime().toString());
+        Log.d("FAS You set alarm ",calendar.getTime().toString());
     }
 }

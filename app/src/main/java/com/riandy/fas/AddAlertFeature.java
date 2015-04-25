@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,19 +134,6 @@ public class AddAlertFeature extends Fragment implements SelectAppToRun.OnSelect
         return view;
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        Log.d("RIANDY","I AM SAVED");
-//        outState.putBoolean(TAG_SOUND_SWITCH,soundSwitch.isChecked());
-//        outState.putBoolean(TAG_NOTIF_SWITCH,notificationSwitch.isChecked());
-//        outState.putBoolean(TAG_LAUNCH_APP_SWITCH,launchAppSwitch.isChecked());
-//        outState.putBoolean(TAG_VIBRATE_SWITCH,vibrateSwitch.isChecked());
-//        outState.putBoolean(TAG_VOICE_SWITCH,voiceInstructionSwitch.isChecked());
-//        outState.putString(TAG_SOUND_URL,soundURL.getText().toString());
-//        outState.putString(TAG_APP_SELECTED,appSelected.getText().toString());
-//    }
-
     private void setupInitialValues(Bundle data){
         if(data==null)
             throw new NullPointerException("cannot setup values, bundle is null.");
@@ -191,9 +177,6 @@ public class AddAlertFeature extends Fragment implements SelectAppToRun.OnSelect
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case 1:
-                    //alarmDetails.alarmTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    //txtToneSelection.setText(RingtoneManager.getRingtone(this, alarmDetails.alarmTone).getTitle(this));
-                    Log.d("Tone","Yes");
                     Uri tone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                     callback.onAddFeatureData(AlertFeature.TAG_SOUND_URL,tone);
                     soundURL.setText(RingtoneManager.getRingtone(frag.getActivity().getApplicationContext(), tone).getTitle(frag.getActivity().getApplicationContext()));

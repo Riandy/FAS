@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,16 +189,13 @@ public class HomePageFragment extends Fragment {
     public boolean isBetweenDate(LocalDate date, AlertModel model){
         boolean result;
 
-        Log.d("riandy",date.toString()+" "+model.getAlertSpecs().getDaySpecs().getStartDate().toString()+" "+model.getAlertSpecs().getDaySpecs().getEndDate().toString());
         if( (date.isAfter(model.getAlertSpecs().getDaySpecs().getStartDate()) || // between startDate and endDate
                 date.isEqual(model.getAlertSpecs().getDaySpecs().getStartDate())) &&
                 (date.isBefore(model.getAlertSpecs().getDaySpecs().getEndDate()) ||
                 date.isEqual(model.getAlertSpecs().getDaySpecs().getEndDate()))){
 
             if(model.getAlertSpecs().getDaySpecs().getEveryNDays()==0){
-                Log.d("riandy","i am here");
                 boolean[] dayOfWeek = model.getAlertSpecs().getDaySpecs().getDayOfWeek();
-                Log.d("riandy","dayOfWeek "+MainActivity.convertBooleanArrayToString(dayOfWeek)+" "+ date.getDayOfWeek());
                 if(date.getDayOfWeek()==7){
                     result = dayOfWeek[0];
                 }else {
@@ -207,15 +203,11 @@ public class HomePageFragment extends Fragment {
                 }
             }else{
                 //check from everyNDays
-                Log.d("riandy ","isbetweenDate2 = "+date.getDayOfYear()+" "+model.getAlertSpecs().getDaySpecs().getStartDate().getDayOfYear()+" " +model.getAlertSpecs().getDaySpecs().getEveryNDays());
-
                 result = ( (date.getDayOfYear() - model.getAlertSpecs().getDaySpecs().getStartDate().getDayOfYear()) % model.getAlertSpecs().getDaySpecs().getEveryNDays() == 0);
             }
         }else{
-            Log.d("riandy ","isbetweenDate1 = ");
             result = false;
         }
-        Log.d("riandy ","isbetweenDate = "+result);
         return result;
     }
 

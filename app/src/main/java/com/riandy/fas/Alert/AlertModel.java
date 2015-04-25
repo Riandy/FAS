@@ -127,45 +127,4 @@ public class AlertModel implements Parcelable{
         sb.append(" numOfTimes"+alertSpecs.getHourSpecs().getNumOfTimes());
         return sb.toString();
     }
-
-//    public AlertModel(Parcel in){
-//        alertFeature = new AlertFeature();
-//        alertSpecs = new AlertSpecs();
-//
-//        isEnabled = in.readInt() == 1;
-//        id = in.readLong();
-//
-//        //alertSpecs
-//        //daySpecs
-//        alertSpecs.getDaySpecs().setDayType(DaySpecs.DayTypes.values()[in.readInt()]);
-//        alertSpecs.getDaySpecs().setDateRange(LocalDate.parse(in.readString()),LocalDate.parse(in.readString()));
-//        boolean[] dayOfWeek = new boolean[7];
-//        in.readBooleanArray(dayOfWeek);
-//        alertSpecs.getDaySpecs().setDayOfWeek(dayOfWeek);
-//        alertSpecs.getDaySpecs().setRepeatWeekly(in.readInt() == 1);
-//
-//        //hourSpecs
-//        alertSpecs.getHourSpecs().setHourType(HourSpecs.HourTypes.values()[in.readInt()]);
-//        alertSpecs.getHourSpecs().setTimeRangeWithoutInterval(LocalTime.parse(in.readString()),LocalTime.parse(in.readString()));
-//        alertSpecs.getHourSpecs().setLastAlertTime(LocalTime.parse(in.readString()));
-//        alertSpecs.getHourSpecs().setIntervalInHour(in.readInt());
-//        alertSpecs.getHourSpecs().setNumOfTimes(in.readInt());
-//        alertSpecs.getHourSpecs().setCurrentCounter(in.readInt());
-//
-//
-//        //AlertFeature
-//        alertFeature.setName(in.readString());
-//        alertFeature.setName(in.readString());
-//        alertFeature.setVibrationEnabled(in.readInt() == 1);
-//        alertFeature.setVoiceInstructionStatusEnabled(in.readInt() == 1);
-//        alertFeature.setSoundEnabled(in.readInt() == 1);
-//        alertFeature.setLaunchAppEnabled(in.readInt() == 1);
-//        alertFeature.setNotificationEnabled(in.readInt() == 1);
-//        alertFeature.setTone(in.readString());
-//        alertFeature.setAppToLaunch(in.readString());
-//    }
-
-//    private AlertModel readFromParcel(Parcel in){
-//        return new AlertModel(in);
-//    }
 }

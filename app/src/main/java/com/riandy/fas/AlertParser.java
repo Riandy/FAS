@@ -53,13 +53,9 @@ public class AlertParser {
             //doc.getDocumentElement().normalize();
 
             NodeList nList = doc.getElementsByTagName("alert");
-            Log.d("riandy","nList "+nList.getLength());
             for (int temp = 0; temp < nList.getLength(); temp++) {
 
-                Log.d("riandy","parsing");
                 Node nNode = nList.item(temp);
-
-                System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -99,7 +95,6 @@ public class AlertParser {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("riandy","error "+e.getMessage());
         }
 
 

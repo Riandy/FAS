@@ -32,9 +32,7 @@ public class HourSpecs {
     }
 
     // Exact time = one timing
-
     // Time Range = startTime, endTime, interval / numOfTimes
-
     // Random = startTime, endTime, numOfTimes
 
     public void setHourType(HourTypes type){

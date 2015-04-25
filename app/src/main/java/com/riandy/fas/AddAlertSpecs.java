@@ -311,7 +311,6 @@ public class AddAlertSpecs extends Fragment implements DatePickerFragment.OnDate
             dayOfWeek[i].setChecked(daySelected[i]);
         }
 
-        //TODO Fix this
         everyNDays.setText(""+specs.getDaySpecs().getEveryNDays());
         if(specs.getHourSpecs().getHourType() == HourSpecs.HourTypes.TIMERANGE)
             numOfTimeOrHour.setText(""+specs.getHourSpecs().getIntervalInHour());

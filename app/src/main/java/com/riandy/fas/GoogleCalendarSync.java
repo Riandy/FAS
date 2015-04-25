@@ -113,7 +113,6 @@ public class GoogleCalendarSync {
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "Singapore");
         updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, model.syncId);
         int rows = context.getContentResolver().update(updateUri, values, null, null);
-        Log.i("update event", "Rows updated: " + rows);
         return rows==1;
     }
 
