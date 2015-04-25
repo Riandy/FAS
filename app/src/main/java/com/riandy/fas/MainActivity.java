@@ -145,9 +145,6 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         switch(id){
-            case R.id.action_settings:
-                    //customize various settings
-                break;
             case R.id.action_addAlert:
                     //launch new fragment to add alert
                 Fragment fragment = new AddAlert();
